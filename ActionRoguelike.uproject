@@ -1,13 +1,16 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "4.27",
+	"EngineAssociation": "{787953B9-43CF-A496-74E1-57AA6A8FDF78}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
 		{
 			"Name": "ActionRoguelike",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
 		}
 	]
 }
