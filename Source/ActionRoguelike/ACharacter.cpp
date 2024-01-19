@@ -34,10 +34,31 @@ void AACharacter::Tick(float DeltaTime)
 
 }
 
+void AACharacter::MoveForward(float Value)
+{
+	if (Value != 0.0f)
+	{
+		AddMovementInput(GetActorForwardVector(), Value);
+	}
+}
+
+void AACharacter::MoveRight(float Value)
+{
+	if (Value != 0.0f)
+	{
+		AddMovementInput(GetActorRightVector(), Value);
+	}
+}
+
 // Called to bind functionality to input
 void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	
+	PlayerInputComponent->BindAxis("MoveForward", this, &AACharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AACharacter::MoveRight);
 
+	PlayerInputComponent->BindAxis("Turn", this, &AACharacter::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &AACharacter::AddControllerPitchInput);
 }
 
