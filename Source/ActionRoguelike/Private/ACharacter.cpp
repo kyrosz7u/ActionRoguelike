@@ -4,6 +4,7 @@
 #include "ACharacter.h"
 
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
 
@@ -13,11 +14,17 @@ AACharacter::AACharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
-	SpringArm->SetupAttachment(RootComponent);
-
-	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
-	Camera->SetupAttachment(SpringArm);
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
+	SpringArmComp->bUsePawnControlRotation = true;
+	SpringArmComp->SetupAttachment(RootComponent);
+	SpringArmComp->SetUsingAbsoluteRotation(true);
+	
+	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
+	CameraComp->SetupAttachment(SpringArmComp);
+	
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	bUseControllerRotationYaw = false;
+	
 }
 
 // Called when the game starts or when spawned
@@ -36,18 +43,26 @@ void AACharacter::Tick(float DeltaTime)
 
 void AACharacter::MoveForward(float Value)
 {
-	if (Value != 0.0f)
-	{
-		AddMovementInput(GetActorForwardVector(), Value);
-	}
+	auto controlRot = GetControlRotation();
+	controlRot.Pitch = 0.0f;
+	controlRot.Roll = 0.0f;
+	
+	AddMovementInput(controlRot.Vector(), Value);
+	
 }
 
 void AACharacter::MoveRight(float Value)
 {
-	if (Value != 0.0f)
-	{
-		AddMovementInput(GetActorRightVector(), Value);
-	}
+	auto controlRot = GetControlRotation();
+	controlRot.Pitch = 0.0f;
+	controlRot.Roll = 0.0f;
+	// X Forward
+	// Y Right
+	// Z Up
+
+	FVector RightVector = FRotationMatrix(controlRot).GetScaledAxis(EAxis::Y);
+	
+	AddMovementInput(RightVector, Value);
 }
 
 // Called to bind functionality to input
@@ -58,7 +73,7 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("MoveForward", this, &AACharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AACharacter::MoveRight);
 
-	PlayerInputComponent->BindAxis("Turn", this, &AACharacter::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &AACharacter::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 }
 
