@@ -19,6 +19,9 @@ public:
 	AACharacter();
 
 protected:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> AProjectileClass;
+	
 	USpringArmComponent *SpringArmComp;
 	UCameraComponent *CameraComp;
 	// Called when the game starts or when spawned
@@ -29,8 +32,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void MoveForward(float Value);
 	void MoveRight(float Value);
+	void PrimaryAttack();
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+	FTransform RightMuzzleTrans;
 };

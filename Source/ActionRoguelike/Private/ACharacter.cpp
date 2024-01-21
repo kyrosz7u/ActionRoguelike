@@ -24,14 +24,14 @@ AACharacter::AACharacter()
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
-	
+
 }
 
 // Called when the game starts or when spawned
 void AACharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	RightMuzzleTrans = GetMesh()->GetSocketTransform("Muzzle_01", ERelativeTransformSpace::RTS_Actor);
 }
 
 // Called every frame
@@ -65,6 +65,17 @@ void AACharacter::MoveRight(float Value)
 	AddMovementInput(RightVector, Value);
 }
 
+void AACharacter::PrimaryAttack()
+{
+	auto handLocaltion = GetMesh()->GetSocketLocation("Muzzle_01");
+	const auto SpawnTM = FTransform(GetControlRotation(), handLocaltion);
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	GetWorld()->SpawnActor(AProjectileClass, &SpawnTM, SpawnParams);
+}
+
 // Called to bind functionality to input
 void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -75,5 +86,7 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+
+	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &AACharacter::PrimaryAttack);
 }
 

@@ -3,25 +3,31 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "GameFramework/Actor.h"
 #include "AMagicProjectile.generated.h"
 
+class UProjectileMovementComponent;
+class USphereComponent;
+class UParticleSystemComponent;
+
 UCLASS()
-class ACTIONROGUELIKE_API AAMagicProjectile : public APawn
+class ACTIONROGUELIKE_API AAMagicProjectile : public AActor
 {
 	GENERATED_BODY()
-
-public:
-	// Sets default values for this pawn's properties
+	
+public:	
+	// Sets default values for this actor's properties
 	AAMagicProjectile();
 
 protected:
 	UPROPERTY(VisibleAnywhere)
-	UProjectileMovementComponent *ProjectileMovementComp;
+	USphereComponent* SphereComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	UParticleSystemComponent *ParticleComp;
 
+	UPROPERTY(VisibleAnywhere)
+	UProjectileMovementComponent *MovementComp;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -29,8 +35,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };
