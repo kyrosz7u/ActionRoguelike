@@ -65,6 +65,14 @@ void AACharacter::MoveRight(float Value)
 	AddMovementInput(RightVector, Value);
 }
 
+void AACharacter::Jump()
+{
+	Super::Jump();
+	
+	auto characterTrans = GetTransform();
+	AddMovementInput(characterTrans.GetUnitAxis(EAxis::Z), 1.0f);
+}
+
 void AACharacter::PrimaryAttack()
 {
 	auto handLocaltion = GetMesh()->GetSocketLocation("Muzzle_01");
@@ -88,5 +96,6 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &AACharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AACharacter::Jump);
 }
 

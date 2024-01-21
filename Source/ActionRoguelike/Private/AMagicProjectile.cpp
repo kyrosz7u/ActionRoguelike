@@ -14,6 +14,7 @@ AAMagicProjectile::AAMagicProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
+	SphereComp->SetCollisionProfileName("Projectile");
 	RootComponent = SphereComp;
 
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");

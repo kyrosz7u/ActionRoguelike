@@ -4,31 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "AMagicProjectile.generated.h"
+#include "AExplosiveBarrel.generated.h"
 
-class UProjectileMovementComponent;
-class USphereComponent;
-class UParticleSystemComponent;
+class URadialForceComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API AAMagicProjectile : public AActor
+class ACTIONROGUELIKE_API AAExplosiveBarrel : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AAMagicProjectile();
+	AAExplosiveBarrel();
 
 protected:
-	
-	UPROPERTY(VisibleAnywhere)
-	USphereComponent* SphereComp;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* staticMesh;
 
-	UPROPERTY(VisibleAnywhere)
-	UProjectileMovementComponent *MovementComp;
-
-	UPROPERTY(VisibleAnywhere)
-	UParticleSystemComponent *ParticleComp;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	URadialForceComponent* radialForce;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -36,5 +30,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	void Onhit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

@@ -32,6 +32,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void MoveForward(float Value);
 	void MoveRight(float Value);
+	virtual void Jump() override;
 	void PrimaryAttack();
 
 	// Called to bind functionality to input
