@@ -11,8 +11,8 @@ UCLASS()
 class ACTIONROGUELIKE_API AAItemChest : public AActor, public IAGameplayInterface
 {
 	GENERATED_BODY()
-	
-	void Interact_Implementation(APawn* InstigatorPawn);
+
+	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
 	
 public:
 	// Sets default values for this actor's properties

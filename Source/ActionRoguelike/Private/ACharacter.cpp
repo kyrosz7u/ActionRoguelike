@@ -3,6 +3,7 @@
 
 #include "ACharacter.h"
 
+#include "AItemInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -13,6 +14,8 @@ AACharacter::AACharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	ItemInteractionComponent = CreateDefaultSubobject<UAItemInteractionComponent>("ItemInteractionComponent");
 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
 	SpringArmComp->bUsePawnControlRotation = true;
@@ -81,6 +84,14 @@ void AACharacter::PrimaryAttack()
 	GetWorld()->SpawnActor(AProjectileClass, &SpawnTM, SpawnParams);
 }
 
+void AACharacter::Interact()
+{
+	if(ItemInteractionComponent != nullptr)
+	{
+		ItemInteractionComponent->PrimaryInteract();
+	}
+}
+
 // Called to bind functionality to input
 void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -94,5 +105,7 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &AACharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AACharacter::Jump);
+
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AACharacter::Interact);
 }
 

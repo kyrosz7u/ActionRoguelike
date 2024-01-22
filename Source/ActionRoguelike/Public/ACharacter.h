@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Character.h"
 #include "ACharacter.generated.h"
 
+class UAItemInteractionComponent;
 class USpringArmComponent;
 class UCameraComponent;
 
@@ -24,6 +26,8 @@ protected:
 	
 	USpringArmComponent *SpringArmComp;
 	UCameraComponent *CameraComp;
+	UAItemInteractionComponent *ItemInteractionComponent;
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -34,6 +38,7 @@ public:
 	void MoveRight(float Value);
 	virtual void Jump() override;
 	void PrimaryAttack();
+	void Interact();
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

@@ -18,14 +18,12 @@ AAItemChest::AAItemChest()
 void AAItemChest::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void AAItemChest::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AAItemChest::Interact_Implementation(APawn* InstigatorPawn)
