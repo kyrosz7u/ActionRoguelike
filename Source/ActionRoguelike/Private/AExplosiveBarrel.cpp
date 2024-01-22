@@ -22,7 +22,12 @@ AAExplosiveBarrel::AAExplosiveBarrel()
 void AAExplosiveBarrel::BeginPlay()
 {
 	Super::BeginPlay();
-	
+}
+
+void AAExplosiveBarrel::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	staticMesh->OnComponentHit.AddDynamic(this, &AAExplosiveBarrel::Onhit);
 }
 
 // Called every frame
@@ -32,7 +37,7 @@ void AAExplosiveBarrel::Tick(float DeltaTime)
 }
 
 // https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Physics/Collision/Overview/
-void AAExplosiveBarrel::Onhit(AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AAExplosiveBarrel::Onhit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	radialForce->FireImpulse();
 }

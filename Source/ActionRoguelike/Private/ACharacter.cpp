@@ -24,7 +24,6 @@ AACharacter::AACharacter()
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
-
 }
 
 // Called when the game starts or when spawned
@@ -48,7 +47,6 @@ void AACharacter::MoveForward(float Value)
 	controlRot.Roll = 0.0f;
 	
 	AddMovementInput(controlRot.Vector(), Value);
-	
 }
 
 void AACharacter::MoveRight(float Value)
@@ -61,7 +59,6 @@ void AACharacter::MoveRight(float Value)
 	// Z Up
 
 	FVector RightVector = FRotationMatrix(controlRot).GetScaledAxis(EAxis::Y);
-	
 	AddMovementInput(RightVector, Value);
 }
 
