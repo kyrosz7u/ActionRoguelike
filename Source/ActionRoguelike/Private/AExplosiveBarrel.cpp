@@ -42,3 +42,8 @@ void AAExplosiveBarrel::Onhit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 	radialForce->FireImpulse();
 }
 
+void AAExplosiveBarrel::Explode()
+{
+	radialForce->FireImpulse();
+}
+
