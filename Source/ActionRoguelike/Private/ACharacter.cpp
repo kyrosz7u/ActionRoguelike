@@ -75,13 +75,8 @@ void AACharacter::Jump()
 
 void AACharacter::PrimaryAttack()
 {
-	auto handLocaltion = GetMesh()->GetSocketLocation("Muzzle_01");
-	const auto SpawnTM = FTransform(GetControlRotation(), handLocaltion);
-
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	GetWorld()->SpawnActor(AProjectileClass, &SpawnTM, SpawnParams);
+	PlayAnimMontage(AttackMontage);
+	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::PrimaryAttack_TimeElapsed, 0.2f, false);
 }
 
 void AACharacter::Interact()
@@ -107,5 +102,16 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AACharacter::Jump);
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AACharacter::Interact);
+}
+
+void AACharacter::PrimaryAttack_TimeElapsed()
+{
+	auto handLocaltion = GetMesh()->GetSocketLocation("Muzzle_01");
+	const auto SpawnTM = FTransform(GetControlRotation(), handLocaltion);
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	GetWorld()->SpawnActor(AProjectileClass, &SpawnTM, SpawnParams);
 }
 

@@ -37,9 +37,12 @@ void UAItemInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickT
 
 void UAItemInteractionComponent::PrimaryInteract()
 {
-	FHitResult hit;
+	TArray<FHitResult> hits;
 
 	FCollisionObjectQueryParams params;
+
+	FCollisionShape shape;
+	
 
 	FVector s;
 	FRotator r;
@@ -51,15 +54,22 @@ void UAItemInteractionComponent::PrimaryInteract()
 	
 	params.AddObjectTypesToQuery(ECC_WorldDynamic);
 	
-	GetWorld()->LineTraceSingleByObjectType(hit, s, e, params);
+	// GetWorld()->LineTraceSingleByObjectType(hit, s, e, params);
 
-	auto a = hit.GetActor();
+	GetWorld()->SweepMultiByObjectType(hits, s, e, FQuat::Identity, params, shape);
 
-	if(a != nullptr)
+	for(auto hit: hits)
 	{
-		if(a->Implements<UAGameplayInterface>())
+		auto a = hit.GetActor();
+
+		if(a != nullptr)
 		{
-			IAGameplayInterface::Execute_Interact(a, Cast<APawn>(o));
+			if(a->Implements<UAGameplayInterface>())
+			{
+				IAGameplayInterface::Execute_Interact(a, Cast<APawn>(o));
+				DrawDebugSphere(GetWorld(), hit.ImpactPoint, 10.0f, 32, FColor::Blue, false, 2.0f);
+				break;
+			}
 		}
 	}
 

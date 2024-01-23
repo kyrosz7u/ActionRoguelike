@@ -21,8 +21,13 @@ public:
 	AACharacter();
 
 protected:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Attack")
 	TSubclassOf<AActor> AProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category="Attack")
+	UAnimMontage* AttackMontage;
+
+	FTimerHandle AttackTimerHandle;
 	
 	USpringArmComponent *SpringArmComp;
 	UCameraComponent *CameraComp;
@@ -42,6 +47,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void PrimaryAttack_TimeElapsed();
 
 private:
 	FTransform RightMuzzleTrans;
