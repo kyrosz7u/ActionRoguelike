@@ -2,6 +2,8 @@
 
 
 #include "AMagicProjectile.h"
+#include "AAttributeComponent.h"
+#include "BehaviorTree/BehaviorTreeTypes.h"
 
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -16,6 +18,8 @@ AAMagicProjectile::AAMagicProjectile()
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
 	SphereComp->SetCollisionProfileName("Projectile");
 	RootComponent = SphereComp;
+	// Can't AddDynamic in Construct Function
+	// SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AAMagicProjectile::OnComponentBeginOverlap);
 
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
 	MovementComp->InitialSpeed = 1000.f;
@@ -27,6 +31,12 @@ AAMagicProjectile::AAMagicProjectile()
 	ParticleComp = CreateDefaultSubobject<UParticleSystemComponent>("ParticleComp");
 	ParticleComp->SetupAttachment(RootComponent);
 	
+}
+
+void AAMagicProjectile::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AAMagicProjectile::OnComponentBeginOverlap);
 }
 
 // Called when the game starts or when spawned
@@ -43,3 +53,18 @@ void AAMagicProjectile::Tick(float DeltaTime)
 
 }
 
+// UPrimitiveComponent, OnComponentBeginOverlap, UPrimitiveComponent*, OverlappedComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, int32, OtherBodyIndex, bool, bFromSweep, const FHitResult &, SweepResult
+void AAMagicProjectile::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor)
+	{
+		UAAttributeComponent* comp = Cast<UAAttributeComponent>(OtherActor->GetComponentByClass(UAAttributeComponent::StaticClass()));
+
+		if(comp != nullptr)
+		{
+			comp->ApplyHealthChanged(-20.0f);
+			Destroy();
+		}
+	}
+}

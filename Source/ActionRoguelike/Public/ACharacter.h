@@ -10,6 +10,7 @@
 class UAItemInteractionComponent;
 class USpringArmComponent;
 class UCameraComponent;
+class UAAttributeComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API AACharacter : public ACharacter
@@ -28,10 +29,16 @@ protected:
 	UAnimMontage* AttackMontage;
 
 	FTimerHandle AttackTimerHandle;
-	
+
+	UPROPERTY(BlueprintReadOnly)
 	USpringArmComponent *SpringArmComp;
+	UPROPERTY(BlueprintReadOnly)
 	UCameraComponent *CameraComp;
+	UPROPERTY(BlueprintReadOnly)
 	UAItemInteractionComponent *ItemInteractionComponent;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Components")
+	UAAttributeComponent *AttributeComponent;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
