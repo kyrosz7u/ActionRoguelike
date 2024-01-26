@@ -3,7 +3,6 @@
 
 #include "AMagicProjectile.h"
 #include "AAttributeComponent.h"
-#include "BehaviorTree/BehaviorTreeTypes.h"
 
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
