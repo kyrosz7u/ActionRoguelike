@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AAttributeComponent.h"
 
 #include "GameFramework/Character.h"
 #include "ACharacter.generated.h"
 
-class UCharacterAttributeUI;
+class UACharacterAttributeUI;
 class UAItemInteractionComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -43,9 +44,9 @@ protected:
 
 	// UI
 	UPROPERTY(EditAnywhere, Category="UI")
-	TSubclassOf<UCharacterAttributeUI> CharacterUIBP;
+	TSubclassOf<UACharacterAttributeUI> CharacterUIBP;
 	UPROPERTY(BlueprintReadOnly, Category="UI")
-	UCharacterAttributeUI* CharacterAttributeUI;
+	UACharacterAttributeUI* CharacterAttributeUI;
 	
 	
 	// Called when the game starts or when spawned

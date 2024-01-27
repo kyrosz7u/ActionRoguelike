@@ -6,7 +6,7 @@
 #include "AItemInteractionComponent.h"
 #include "AAttributeComponent.h"
 #include "Camera/CameraComponent.h"
-#include "CharacterAttributeUI.h"
+#include "ACharacterAttributeUI.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -32,11 +32,13 @@ AACharacter::AACharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
 
-	if(CharacterUIBP!=nullptr)
-	{
-		CharacterAttributeUI = NewObject<UCharacterAttributeUI>(this, CharacterUIBP);
-		CharacterAttributeUI->AddToViewport();
-	}
+	// CharacterUIBP 是在子类蓝图中设置的，父类先于子类构造，
+	// 所以在这里子类还没完成构造，CharacterUIBP没有被蓝图初始化！！！
+	// if(CharacterUIBP!=nullptr)
+	// {
+	// 	CharacterAttributeUI = NewObject<UACharacterAttributeUI>(this, CharacterUIBP);
+	// 	CharacterAttributeUI->AddToViewport();
+	// }
 }
 
 // Called when the game starts or when spawned
@@ -44,6 +46,13 @@ void AACharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	RightMuzzleTrans = GetMesh()->GetSocketTransform("Muzzle_01", ERelativeTransformSpace::RTS_Actor);
+
+	if(CharacterUIBP!=nullptr)
+	{
+		CharacterAttributeUI = NewObject<UACharacterAttributeUI>(this, CharacterUIBP);
+		AttributeComponent->OnHealthChange.AddDynamic(CharacterAttributeUI, &UACharacterAttributeUI::ApplyHealthChange);
+		CharacterAttributeUI->AddToViewport();
+	}
 }
 
 // Called every frame
@@ -94,6 +103,14 @@ void AACharacter::Interact()
 	if(ItemInteractionComponent != nullptr)
 	{
 		ItemInteractionComponent->PrimaryInteract();
+	}
+}
+
+void AACharacter::RegisterUIAttributeChangeDelegate(UACharacterAttributeUI* ptr ,void (UACharacterAttributeUI::*func)(AActor*, UAAttributeComponent*, float, float))
+{
+	if(AttributeComponent != nullptr)
+	{
+		AttributeComponent->OnHealthChange.AddDynamic(ptr, func);
 	}
 }
 

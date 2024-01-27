@@ -31,6 +31,6 @@ void UAAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 void UAAttributeComponent::ApplyHealthChanged(float delta)
 {
 	Health += delta;
-	OnHealthChanged.Broadcast(nullptr, this, Health, MaxHealth);
+	OnHealthChange.Broadcast(nullptr, this, Health, MaxHealth);
 }
 

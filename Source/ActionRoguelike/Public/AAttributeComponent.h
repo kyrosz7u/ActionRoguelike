@@ -18,6 +18,10 @@ public:
 	// Sets default values for this component's properties
 	UAAttributeComponent();
 
+	UPROPERTY(BlueprintAssignable, Category="Attributes")
+	FOnAttrChanged OnHealthChange;
+
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float MaxHealth;
@@ -25,8 +29,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float Health;
 
-	UPROPERTY(BlueprintAssignable, Category="Attributes")
-	FOnAttrChanged OnHealthChanged;
 	
 	// Called when the game starts
 	virtual void BeginPlay() override;
