@@ -13,4 +13,5 @@ void UACharacterAttributeUI::ApplyHealthChange(AActor* InstigatorActor, UAAttrib
 {
     HealthStr = FText::AsNumber(NewValue);
     HealthPercent = NewValue/MaxValue;
+    OnUIHealthChanged();
 }

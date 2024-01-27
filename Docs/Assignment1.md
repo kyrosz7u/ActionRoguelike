@@ -178,4 +178,8 @@ The reflection data will be used to bind the property to UE events at runtime. C
 - BlueprintReadWrite - read-write access in Blueprints
 - Category = "" - display only for detail panels and blueprint context menu.
 
+For UFUNCTION:
+- BlueprintImplementableEvent - is a function declared in C++ without a default implementation but can be overridden in Blueprints. If not overridden in Blueprints, calling it will have no effect. Use it to define an event in C++ and allow the Blueprint author to provide their own implementation.
+- BlueprintNativeEvent - provide a default implementation in C++. If not overridden in Blueprints, the default C++ implementation will be called. It need a default C++ implementation.
+
 https://docs.unrealengine.com/5.0/en-US/reflection-system-in-unreal-engine/

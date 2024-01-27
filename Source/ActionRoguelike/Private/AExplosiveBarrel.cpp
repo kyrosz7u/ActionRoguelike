@@ -3,6 +3,7 @@
 
 #include "AExplosiveBarrel.h"
 
+#include "AAttributeComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
@@ -39,7 +40,15 @@ void AAExplosiveBarrel::Tick(float DeltaTime)
 // https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Physics/Collision/Overview/
 void AAExplosiveBarrel::Onhit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	radialForce->FireImpulse();
+	if(OtherActor!=nullptr)
+	{
+		UAAttributeComponent* comp = Cast<UAAttributeComponent>(OtherActor->GetComponentByClass(UAAttributeComponent::StaticClass()));
+		if(comp != nullptr)
+		{
+			comp->ApplyHealthChanged(this, -20.0f);
+			radialForce->FireImpulse();
+		}
+	}
 }
 
 void AAExplosiveBarrel::Explode()

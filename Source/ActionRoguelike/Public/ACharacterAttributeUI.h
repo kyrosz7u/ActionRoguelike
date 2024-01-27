@@ -27,4 +27,7 @@ protected:
 
     UPROPERTY(BlueprintReadOnly, Category="UIAttributes")
     float HealthPercent;
+
+	UFUNCTION(BlueprintImplementableEvent ,Category="UIEvent")
+	void OnUIHealthChanged();
 };
