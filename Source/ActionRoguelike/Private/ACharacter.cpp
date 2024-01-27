@@ -6,6 +6,7 @@
 #include "AItemInteractionComponent.h"
 #include "AAttributeComponent.h"
 #include "Camera/CameraComponent.h"
+#include "CharacterAttributeUI.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -30,6 +31,12 @@ AACharacter::AACharacter()
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
+
+	if(CharacterUIBP!=nullptr)
+	{
+		CharacterAttributeUI = NewObject<UCharacterAttributeUI>(this, CharacterUIBP);
+		CharacterAttributeUI->AddToViewport();
+	}
 }
 
 // Called when the game starts or when spawned

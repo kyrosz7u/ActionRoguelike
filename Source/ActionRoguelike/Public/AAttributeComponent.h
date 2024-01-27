@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "AAttributeComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAttrChanged, AActor*, InstigatorActor, UAAttributeComponent*, OwningComp, float, NewValue, float, MaxValue);
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONROGUELIKE_API UAAttributeComponent : public UActorComponent
@@ -18,7 +20,13 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	float MaxHealth;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float Health;
+
+	UPROPERTY(BlueprintAssignable, Category="Attributes")
+	FOnAttrChanged OnHealthChanged;
 	
 	// Called when the game starts
 	virtual void BeginPlay() override;

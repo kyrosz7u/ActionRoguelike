@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "ACharacter.generated.h"
 
+class UCharacterAttributeUI;
 class UAItemInteractionComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -37,8 +38,15 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	UAItemInteractionComponent *ItemInteractionComponent;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Components")
+	UPROPERTY(BlueprintReadOnly, Category="Components")
 	UAAttributeComponent *AttributeComponent;
+
+	// UI
+	UPROPERTY(EditAnywhere, Category="UI")
+	TSubclassOf<UCharacterAttributeUI> CharacterUIBP;
+	UPROPERTY(BlueprintReadOnly, Category="UI")
+	UCharacterAttributeUI* CharacterAttributeUI;
+	
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
