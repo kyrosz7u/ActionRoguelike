@@ -47,10 +47,11 @@ void AACharacter::BeginPlay()
 	Super::BeginPlay();
 	RightMuzzleTrans = GetMesh()->GetSocketTransform("Muzzle_01", ERelativeTransformSpace::RTS_Actor);
 
-	if(CharacterUIBP!=nullptr)
+	if(CharacterUIBP!=nullptr && CharacterAttributeUI == nullptr)
 	{
 		CharacterAttributeUI = NewObject<UACharacterAttributeUI>(this, CharacterUIBP);
 		AttributeComponent->OnHealthChange.AddDynamic(CharacterAttributeUI, &UACharacterAttributeUI::ApplyHealthChange);
+		AttributeComponent->ApplyHealthChanged(nullptr, 0);
 		CharacterAttributeUI->AddToViewport();
 	}
 }
@@ -103,14 +104,6 @@ void AACharacter::Interact()
 	if(ItemInteractionComponent != nullptr)
 	{
 		ItemInteractionComponent->PrimaryInteract();
-	}
-}
-
-void AACharacter::RegisterUIAttributeChangeDelegate(UACharacterAttributeUI* ptr ,void (UACharacterAttributeUI::*func)(AActor*, UAAttributeComponent*, float, float))
-{
-	if(AttributeComponent != nullptr)
-	{
-		AttributeComponent->OnHealthChange.AddDynamic(ptr, func);
 	}
 }
 

@@ -62,7 +62,7 @@ void AAMagicProjectile::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedC
 
 		if(comp != nullptr)
 		{
-			comp->ApplyHealthChanged(-20.0f);
+			comp->ApplyHealthChanged(this, -1.0f);
 			Destroy();
 		}
 	}

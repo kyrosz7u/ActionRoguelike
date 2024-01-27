@@ -7,6 +7,7 @@
 UAAttributeComponent::UAAttributeComponent()
 {
 	Health = 100.0f;
+	MaxHealth = 100.f;
 }
 
 
@@ -28,9 +29,10 @@ void UAAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-void UAAttributeComponent::ApplyHealthChanged(float delta)
+void UAAttributeComponent::ApplyHealthChanged(AActor* instigator, float delta)
 {
 	Health += delta;
-	OnHealthChange.Broadcast(nullptr, this, Health, MaxHealth);
+	Health = FMath::Clamp(Health,0.0f, MaxHealth); 
+	OnHealthChange.Broadcast(instigator, this, Health, MaxHealth);
 }
 
