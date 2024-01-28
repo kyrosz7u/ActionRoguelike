@@ -6,7 +6,7 @@
 
 void UACharacterAttributeUI::ApplyHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta)
 {
-    HealthStr = FText::AsNumber(NewValue);
+    CurHealth = NewValue;
     HealthPercent = NewValue/MaxValue;
     OnUIHealthChanged();
 }

@@ -23,7 +23,7 @@ public:
 
 protected:
     UPROPERTY(BlueprintReadOnly, Category="UIAttributes")
-    FText HealthStr;
+    float CurHealth;
 
     UPROPERTY(BlueprintReadOnly, Category="UIAttributes")
     float HealthPercent;
