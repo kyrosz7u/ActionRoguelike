@@ -6,10 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "AAttributeComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAttrChanged, AActor*, InstigatorActor, UAAttributeComponent*, OwningComp, float, NewValue, float, MaxValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnAttrChanged, AActor*, InstigatorActor, UAAttributeComponent*, OwningComp, float, NewValue, float, MaxValue, float, Delta);
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), DisplayName="Attribute Component")
 class ACTIONROGUELIKE_API UAAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()

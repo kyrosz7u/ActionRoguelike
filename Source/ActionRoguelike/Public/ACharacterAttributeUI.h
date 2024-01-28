@@ -19,7 +19,7 @@ class ACTIONROGUELIKE_API UACharacterAttributeUI : public UUserWidget
     
 public:
 	UFUNCTION()
-    void ApplyHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue);
+    void ApplyHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta);
 
 protected:
     UPROPERTY(BlueprintReadOnly, Category="UIAttributes")

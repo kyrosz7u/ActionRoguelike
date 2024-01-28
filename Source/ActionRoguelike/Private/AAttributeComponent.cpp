@@ -34,6 +34,6 @@ void UAAttributeComponent::ApplyHealthChanged(AActor* instigator, float delta)
 	Health += delta;
 	Health = FMath::Clamp(Health,0.0f, MaxHealth);
 	
-	OnHealthChange.Broadcast(instigator, this, Health, MaxHealth);
+	OnHealthChange.Broadcast(instigator, this, Health, MaxHealth, delta);
 }
 
