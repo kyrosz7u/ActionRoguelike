@@ -10,5 +10,10 @@ public class ActionRoguelikeEditorTarget : TargetRules
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.AddRange( new string[] { "ActionRoguelike" } );
+		if (Target.Platform == UnrealTargetPlatform.Mac)
+		{
+			bOverrideBuildEnvironment = true;
+			AdditionalCompilerArguments = "-Wno-unused-but-set-variable";
+		}
 	}
 }
