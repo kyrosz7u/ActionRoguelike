@@ -6,6 +6,7 @@
 
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
@@ -19,7 +20,7 @@ AAMagicProjectile::AAMagicProjectile()
 	RootComponent = SphereComp;
 	// Can't AddDynamic in Construct Function
 	// SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AAMagicProjectile::OnComponentBeginOverlap);
-
+	
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
 	MovementComp->InitialSpeed = 1000.f;
 	MovementComp->MaxSpeed = 1000.f;
@@ -35,7 +36,8 @@ AAMagicProjectile::AAMagicProjectile()
 void AAMagicProjectile::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AAMagicProjectile::OnComponentBeginOverlap);
+	// SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AAMagicProjectile::OnComponentBeginOverlap);
+	SphereComp->OnComponentHit.AddDynamic(this, &AAMagicProjectile::OnComponentHit);
 }
 
 // Called when the game starts or when spawned
@@ -58,12 +60,28 @@ void AAMagicProjectile::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedC
 {
 	if (OtherActor)
 	{
-		UAAttributeComponent* comp = Cast<UAAttributeComponent>(OtherActor->GetComponentByClass(UAAttributeComponent::StaticClass()));
+		UAAttributeComponent* Comp = Cast<UAAttributeComponent>(OtherActor->GetComponentByClass(UAAttributeComponent::StaticClass()));
 
-		if(comp != nullptr)
+		if(Comp != nullptr)
 		{
-			comp->ApplyHealthChanged(this, -1.0f);
-			Destroy();
+			Comp->ApplyHealthChanged(this, -1.0f);
 		}
 	}
 }
+
+// UPrimitiveComponent, OnComponentHit, UPrimitiveComponent*, HitComponent, AActor*, OtherActor, UPrimitiveComponent*, OtherComp, FVector, NormalImpulse, const FHitResult&, Hit 
+void AAMagicProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor)
+	{
+		UAAttributeComponent* Comp = Cast<UAAttributeComponent>(OtherActor->GetComponentByClass(UAAttributeComponent::StaticClass()));
+		if(Comp != nullptr)
+		{
+			Comp->ApplyHealthChanged(this, -1.0f);
+		}
+	}
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetActorLocation());
+	Destroy();
+}
+

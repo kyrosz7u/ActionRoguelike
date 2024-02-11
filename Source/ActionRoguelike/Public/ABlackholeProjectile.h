@@ -4,23 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "AMagicProjectile.generated.h"
+#include "ABlackholeProjectile.generated.h"
 
 class UProjectileMovementComponent;
 class USphereComponent;
-class UParticleSystemComponent;
+class URadialForceComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API AAMagicProjectile : public AActor
+class ACTIONROGUELIKE_API AABlackholeProjectile : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AAMagicProjectile();
+	AABlackholeProjectile();
 
 protected:
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USphereComponent* SphereComp;
 
@@ -30,8 +29,8 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent *ParticleComp;
 
-	UPROPERTY(EditAnywhere)
-	UParticleSystem* HitParticle;
+	UPROPERTY(VisibleAnywhere)
+	URadialForceComponent *RadialForceComp;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -42,13 +41,8 @@ protected:
 	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 										UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UFUNCTION()
-	void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	                    FVector NormalImpulse, const FHitResult& Hit);
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
 };

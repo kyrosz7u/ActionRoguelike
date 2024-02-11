@@ -7,8 +7,11 @@
 #include "AAttributeComponent.h"
 #include "Camera/CameraComponent.h"
 #include "ACharacterAttributeUI.h"
+#include "DrawDebugHelpers.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 // Sets default values
@@ -95,8 +98,28 @@ void AACharacter::Jump()
 
 void AACharacter::PrimaryAttack()
 {
-	PlayAnimMontage(AttackMontage);
-	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::PrimaryAttack_TimeElapsed, 0.2f, false);
+	auto cameraForward = CameraComp->GetForwardVector();
+	// auto rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),
+	auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
+	SetActorRotation(rot);
+	PlayAnimMontage(PrimaryAttackMontage);
+	if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
+	{
+		GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::PrimaryAttack_TimeElapsed, 0.2f, false);
+	}
+}
+
+void AACharacter::BlackholeAbility()
+{
+	auto cameraForward = CameraComp->GetForwardVector();
+	// auto rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),
+	auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
+	SetActorRotation(rot);
+	PlayAnimMontage(BlackholeAbilityMontage);
+	if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
+	{
+		GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::BlackHoleAbility_TimeElapsed, 0.2f, false);
+	}
 }
 
 void AACharacter::Interact()
@@ -119,6 +142,7 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &AACharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("Ability2", IE_Pressed, this, &AACharacter::BlackholeAbility);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AACharacter::Jump);
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AACharacter::Interact);
@@ -127,12 +151,73 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void AACharacter::PrimaryAttack_TimeElapsed()
 {
 	auto handLocaltion = GetMesh()->GetSocketLocation("Muzzle_01");
-	const auto SpawnTM = FTransform(GetControlRotation(), handLocaltion);
-
+	
+	FTransform SpawnTM;
+	FVector hitLoc;
+	if(GetAimAt(hitLoc))
+	{
+		// 使用targetLoc-handLocaltion作为forward向量构造旋转
+		SpawnTM = FTransform(UKismetMathLibrary::MakeRotFromX(hitLoc-handLocaltion), handLocaltion);
+		DrawDebugLine(GetWorld(), handLocaltion, hitLoc, FColor::Red, false, 2.0f, 0, 1.0f);
+	}
+	else
+	{
+		SpawnTM = FTransform(UKismetMathLibrary::MakeRotFromX(hitLoc), handLocaltion);
+	}
+	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;
 
-	GetWorld()->SpawnActor(AProjectileClass, &SpawnTM, SpawnParams);
+	GetWorld()->SpawnActor(PrimaryAttackClass, &SpawnTM, SpawnParams);
 }
+
+void AACharacter::BlackHoleAbility_TimeElapsed()
+{
+	auto handLocaltion = GetMesh()->GetSocketLocation("Muzzle_02");
+	
+	FTransform SpawnTM;
+	FVector hitLoc;
+
+	if(GetAimAt(hitLoc))
+	{
+		// 使用targetLoc-handLocaltion作为forward向量构造旋转
+		SpawnTM = FTransform(UKismetMathLibrary::MakeRotFromX(hitLoc-handLocaltion), handLocaltion);
+		DrawDebugLine(GetWorld(), handLocaltion, hitLoc, FColor::Red, false, 2.0f, 0, 1.0f);
+	}
+	else
+	{
+		SpawnTM = FTransform(UKismetMathLibrary::MakeRotFromX(hitLoc), handLocaltion);
+	}
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+	
+	GetWorld()->SpawnActor(BlackholeAbilityClass, &SpawnTM, SpawnParams);
+}
+
+// true: aimAtLoc = hitLoc; false: aimAtLoc = cameraLookAt
+bool AACharacter::GetAimAt(FVector &aimAtLoc)
+{
+	auto cameraForward = CameraComp->GetForwardVector();
+	
+	FCollisionObjectQueryParams queryParams;
+	FHitResult hit;
+	FVector s = CameraComp->GetComponentLocation();
+	FVector e = s + cameraForward * 5000;
+
+	// 我的理解：Channel包括了Trace和Object两种类型
+	queryParams.ObjectTypesToQuery = ECC_TO_BITFIELD(ECC_WorldStatic)|ECC_TO_BITFIELD(ECC_WorldDynamic)
+		|ECC_TO_BITFIELD(ECC_Pawn)|ECC_TO_BITFIELD(ECC_PhysicsBody);
+
+	if(GetWorld()->LineTraceSingleByObjectType(hit, s, e, queryParams))
+	{
+		aimAtLoc = hit.ImpactPoint;
+		return true;
+	}
+	aimAtLoc = cameraForward;
+	return false;
+}
+
 

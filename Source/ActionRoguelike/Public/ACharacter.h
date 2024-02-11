@@ -25,16 +25,22 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, Category="Attack")
-	TSubclassOf<AActor> AProjectileClass;
+	TSubclassOf<AActor> PrimaryAttackClass;
 
 	UPROPERTY(EditAnywhere, Category="Attack")
-	UAnimMontage* AttackMontage;
+	UAnimMontage* PrimaryAttackMontage;
+
+	UPROPERTY(EditAnywhere, Category="Attack")
+	TSubclassOf<AActor> BlackholeAbilityClass;
+
+	UPROPERTY(EditAnywhere, Category="Attack")
+	UAnimMontage* BlackholeAbilityMontage;
 
 	FTimerHandle AttackTimerHandle;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditAnywhere)
 	USpringArmComponent *SpringArmComp;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditAnywhere)
 	UCameraComponent *CameraComp;
 	UPROPERTY(BlueprintReadOnly)
 	UAItemInteractionComponent *ItemInteractionComponent;
@@ -59,11 +65,14 @@ public:
 	void MoveRight(float Value);
 	virtual void Jump() override;
 	void PrimaryAttack();
+	void BlackholeAbility();
 	void Interact();
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void PrimaryAttack_TimeElapsed();
+	void BlackHoleAbility_TimeElapsed();
+	bool GetAimAt(FVector& aimAtLoc);
 
 private:
 	FTransform RightMuzzleTrans;

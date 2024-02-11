@@ -43,7 +43,6 @@ void UAItemInteractionComponent::PrimaryInteract()
 
 	FCollisionShape shape;
 	
-
 	FVector s;
 	FRotator r;
 
