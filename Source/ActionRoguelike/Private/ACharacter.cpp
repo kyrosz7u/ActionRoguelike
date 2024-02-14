@@ -65,6 +65,12 @@ void AACharacter::Tick(float DeltaTime)
 
 }
 
+void AACharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	AttributeComponent->OnHealthChange.AddDynamic(this, &AACharacter::OnHealthChange);
+}
+
 void AACharacter::MoveForward(float Value)
 {
 	auto controlRot = GetControlRotation();
@@ -258,6 +264,19 @@ bool AACharacter::GetAimAt(FVector &aimAtLoc)
 	}
 	aimAtLoc = cameraForward;
 	return false;
+}
+
+void AACharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue,
+	float MaxValue, float Delta)
+{
+	if(NewValue <= 0.0f && Delta < 0.0f)
+	{
+		APlayerController* pc = Cast<APlayerController>(GetController());
+		if(pc)
+		{
+			DisableInput(pc);
+		}
+	}
 }
 
 

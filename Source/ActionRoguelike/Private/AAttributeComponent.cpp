@@ -37,3 +37,8 @@ void UAAttributeComponent::ApplyHealthChanged(AActor* instigator, float delta)
 	OnHealthChange.Broadcast(instigator, this, Health, MaxHealth, delta);
 }
 
+bool UAAttributeComponent::IsAlive() const
+{
+	return Health > 0.0f;
+}
+

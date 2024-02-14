@@ -21,7 +21,6 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Attributes")
 	FOnAttrChanged OnHealthChange;
 
-
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float MaxHealth;
@@ -29,6 +28,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float Health;
 
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	bool IsAlive() const;
 	
 	// Called when the game starts
 	virtual void BeginPlay() override;

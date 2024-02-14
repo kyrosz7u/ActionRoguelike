@@ -59,7 +59,10 @@ protected:
 	TSubclassOf<UACharacterAttributeUI> CharacterUIBP;
 	UPROPERTY(BlueprintReadOnly, Category="UI")
 	UACharacterAttributeUI* CharacterAttributeUI;
-	
+
+	// Animation
+	UFUNCTION()
+	void OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta);
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -67,6 +70,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void PostInitializeComponents() override;
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	virtual void Jump() override;
