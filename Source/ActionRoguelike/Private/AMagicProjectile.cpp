@@ -81,7 +81,7 @@ void AAMagicProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor
 			Comp->ApplyHealthChanged(this, -1.0f);
 		}
 	}
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetActorLocation());
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetActorLocation(), FRotator::ZeroRotator, FVector(0.5f));
 	Destroy();
 }
 
