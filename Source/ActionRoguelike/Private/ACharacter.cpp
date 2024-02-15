@@ -48,7 +48,6 @@ AACharacter::AACharacter()
 void AACharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	RightMuzzleTrans = GetMesh()->GetSocketTransform("Muzzle_01", ERelativeTransformSpace::RTS_Actor);
 
 	if(CharacterUIBP!=nullptr && CharacterAttributeUI == nullptr)
 	{
@@ -98,27 +97,43 @@ void AACharacter::Jump()
 
 void AACharacter::PrimaryAttack()
 {
-	auto cameraForward = CameraComp->GetForwardVector();
-	// auto rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),
-	auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
-	SetActorRotation(rot);
-	PlayAnimMontage(PrimaryAttackMontage);
 	if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
 	{
+		auto cameraForward = CameraComp->GetForwardVector();
+		auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
+		auto rawRot = GetActorRotation();
+		rawRot.Yaw = rot.Yaw;
+		SetActorRotation(rawRot);
+		PlayAnimMontage(PrimaryAttackMontage);
 		GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::PrimaryAttack_TimeElapsed, 0.2f, false);
 	}
 }
 
 void AACharacter::BlackholeAbility()
 {
-	auto cameraForward = CameraComp->GetForwardVector();
-	// auto rot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),
-	auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
-	SetActorRotation(rot);
-	PlayAnimMontage(BlackholeAbilityMontage);
 	if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
 	{
+		auto cameraForward = CameraComp->GetForwardVector();
+		auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
+		auto rawRot = GetActorRotation();
+		rawRot.Yaw = rot.Yaw;
+		SetActorRotation(rawRot);
+		PlayAnimMontage(BlackholeAbilityMontage);
 		GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::BlackHoleAbility_TimeElapsed, 0.2f, false);
+	}
+}
+
+void AACharacter::DashAbility()
+{
+	if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
+	{
+		auto cameraForward = CameraComp->GetForwardVector();
+		auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
+		auto rawRot = GetActorRotation();
+		rawRot.Yaw = rot.Yaw;
+		SetActorRotation(rawRot);
+		PlayAnimMontage(DashAbilityMontage);
+		GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::DashAbility_TimeElapsed, 0.2f, false);
 	}
 }
 
@@ -140,10 +155,11 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AACharacter::Jump);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &AACharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("Ability2", IE_Pressed, this, &AACharacter::BlackholeAbility);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AACharacter::Jump);
+	PlayerInputComponent->BindAction("Ability3", IE_Pressed, this, &AACharacter::DashAbility);
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AACharacter::Interact);
 }
@@ -195,6 +211,30 @@ void AACharacter::BlackHoleAbility_TimeElapsed()
 	SpawnParams.Instigator = this;
 	
 	GetWorld()->SpawnActor(BlackholeAbilityClass, &SpawnTM, SpawnParams);
+}
+
+void AACharacter::DashAbility_TimeElapsed()
+{
+	auto handLocaltion = GetMesh()->GetSocketLocation("Muzzle_01");
+	
+	FTransform SpawnTM;
+	FVector hitLoc;
+	if(GetAimAt(hitLoc))
+	{
+		// 使用targetLoc-handLocaltion作为forward向量构造旋转
+		SpawnTM = FTransform(UKismetMathLibrary::MakeRotFromX(hitLoc-handLocaltion), handLocaltion);
+		DrawDebugLine(GetWorld(), handLocaltion, hitLoc, FColor::Red, false, 2.0f, 0, 1.0f);
+	}
+	else
+	{
+		SpawnTM = FTransform(UKismetMathLibrary::MakeRotFromX(hitLoc), handLocaltion);
+	}
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+
+	GetWorld()->SpawnActor(DashAbilityClass, &SpawnTM, SpawnParams);
 }
 
 // true: aimAtLoc = hitLoc; false: aimAtLoc = cameraLookAt

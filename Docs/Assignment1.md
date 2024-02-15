@@ -1,9 +1,9 @@
 # ASSIGNMENT 1
 
-## Setup Project in GitHub
+## Setup Project in GitHub (1/3)
 Done
 
-## Character with movement/look input
+## Character with movement/look input (2/3)
 ### Config keyboard inputs in project settings
 ![img.png](_pics/img.png)
 
@@ -68,7 +68,7 @@ void AACharacter::MoveRight(float Value)
 }
 ```
 
-## Implement Magic Projectile
+### Implement Magic Projectile
 1. Create a new C++ class inherited from Actor, named AMagicProjectile. Add a static mesh component and a projectile movement component.
 ```c++
 AAMagicProjectile::AAMagicProjectile()
@@ -89,7 +89,7 @@ It is also necessary to set the collision profile in project settings.
 2. Create a blueprint inherited from AMagicProjectile, named BP_MagicProjectile. Set the static mesh and particle system and use 'P_Gideon_Primary_Projectile' as the particle.
 
 
-## Bind Jumping via BindAction()
+### Bind Jumping via BindAction()
 The way to bind jump is the same as binding primary attack. The only difference is that the jump function is in CharacterMovementComponent, not in Character class.
 ```c++
 void AACharacter::Jump()
@@ -101,7 +101,7 @@ void AACharacter::Jump()
 }
 ```
 
-## Explosive Barrel re-implemented in C++
+## Explosive Barrel re-implemented in C++ (3/3)
 The BluePrint version of explosive barrel:
 ![img2.png](_pics/img2.png)
 The C++ version of explosive barrel:
@@ -178,8 +178,15 @@ The reflection data will be used to bind the property to UE events at runtime. C
 - BlueprintReadWrite - read-write access in Blueprints
 - Category = "" - display only for detail panels and blueprint context menu.
 
-For UFUNCTION:
+For UFUNCTION():
 - BlueprintImplementableEvent - is a function declared in C++ without a default implementation but can be overridden in Blueprints. If not overridden in Blueprints, calling it will have no effect. Use it to define an event in C++ and allow the Blueprint author to provide their own implementation.
 - BlueprintNativeEvent - provide a default implementation in C++. If not overridden in Blueprints, the default C++ implementation will be called. It need a default C++ implementation.
+
+## End
+My Github Repository:
+
+[ActionRoguelike](https://github.com/kyrosz7u/ActionRoguelike)
+
+ref:
 
 https://docs.unrealengine.com/5.0/en-US/reflection-system-in-unreal-engine/

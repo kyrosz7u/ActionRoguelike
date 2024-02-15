@@ -36,6 +36,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Attack")
 	UAnimMontage* BlackholeAbilityMontage;
 
+	UPROPERTY(EditAnywhere, Category="Attack")
+	TSubclassOf<AActor> DashAbilityClass;
+
+	UPROPERTY(EditAnywhere, Category="Attack")
+	UAnimMontage* DashAbilityMontage;
+
 	FTimerHandle AttackTimerHandle;
 
 	UPROPERTY(EditAnywhere)
@@ -66,14 +72,13 @@ public:
 	virtual void Jump() override;
 	void PrimaryAttack();
 	void BlackholeAbility();
+	void DashAbility();
 	void Interact();
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void PrimaryAttack_TimeElapsed();
 	void BlackHoleAbility_TimeElapsed();
+	void DashAbility_TimeElapsed();
 	bool GetAimAt(FVector& aimAtLoc);
-
-private:
-	FTransform RightMuzzleTrans;
 };

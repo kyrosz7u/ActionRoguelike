@@ -21,23 +21,24 @@ AABlackholeProjectile::AABlackholeProjectile()
 	ParticleComp->SetupAttachment(RootComponent);
 	RadialForceComp->SetupAttachment(RootComponent);
 
-	MovementComp->InitialSpeed = 500.f;
-	MovementComp->MaxSpeed = 500.f;
+	MovementComp->InitialSpeed = 512.f;
+	MovementComp->MaxSpeed = 1024.f;
 	MovementComp->ProjectileGravityScale = 0.f;
 	MovementComp->bRotationFollowsVelocity = true;
 	MovementComp->bInitialVelocityInLocalSpace = true;
 
-	RadialForceComp->Radius = 256.f;
-	RadialForceComp->ForceStrength = -1000.f;
+	RadialForceComp->Radius = 512.f;
+	RadialForceComp->ForceStrength = -500000.f;
 	// 不忽略物体质量因素
-	RadialForceComp->bImpulseVelChange = false;
-	RadialForceComp->bIgnoreOwningActor = true;
+	// RadialForceComp->bImpulseVelChange = false;
+	// RadialForceComp->bIgnoreOwningActor = true;
 }
 
 void AABlackholeProjectile::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AABlackholeProjectile::OnComponentBeginOverlap);
+	SetLifeSpan(5.f);
 }
 
 void AABlackholeProjectile::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
