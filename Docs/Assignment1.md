@@ -182,6 +182,15 @@ For UFUNCTION():
 - BlueprintImplementableEvent - is a function declared in C++ without a default implementation but can be overridden in Blueprints. If not overridden in Blueprints, calling it will have no effect. Use it to define an event in C++ and allow the Blueprint author to provide their own implementation.
 - BlueprintNativeEvent - provide a default implementation in C++. If not overridden in Blueprints, the default C++ implementation will be called. It need a default C++ implementation.
 
+## Android Build
+### Android SDK and NDK
+- SDK Version: 30
+- NDK Version: 21.4.7075529
+- Jave Version: 1.8.0_291
+
+### Jave Compile Error
+https://forums.unrealengine.com/t/help-with-ue4-webviewcontrol-java-error-cannot-find-symbol/1148618
+
 ## End
 My Github Repository:
 

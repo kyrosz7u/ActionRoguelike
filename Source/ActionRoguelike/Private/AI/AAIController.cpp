@@ -4,7 +4,7 @@
 #include "AI/AAIController.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Kismet/GameplayStatics.h"
+#include "GameFramework/Character.h"
 
 void AAAIController::BeginPlay()
 {
@@ -12,9 +12,10 @@ void AAAIController::BeginPlay()
 
 	RunBehaviorTree(BehaviorTree);
 
-	APawn *PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	if(PlayerPawn)
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if(PlayerController)
 	{
-		GetBlackboardComponent()->SetValueAsObject("TargetActor", PlayerPawn);
+		ACharacter* ControlledCharacter = Cast<ACharacter>(PlayerController->GetPawn());
+		GetBlackboardComponent()->SetValueAsObject("TargetActor", ControlledCharacter);
 	}
 }

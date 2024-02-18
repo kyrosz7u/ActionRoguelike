@@ -15,10 +15,11 @@ class ACTIONROGUELIKE_API UABTService_CheckAttackRange : public UBTService
 	GENERATED_BODY()
 
 protected:
-	float AttackRange = 2000.0f;
+	UPROPERTY(EditAnywhere, Category="AI", meta=(ClampMin="0.0", UIMin="0.0"))
+	float AttackRange = 1000.0f;
 
 	// 通过这样可以访问到blackboard中的值
-	UPROPERTY(EditAnywhere, Category="AI")
+	UPROPERTY(EditAnywhere, Category="BBKey")
 	FBlackboardKeySelector WithinAttackRangeKey;
 	
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;	
