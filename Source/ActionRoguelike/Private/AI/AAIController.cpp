@@ -10,12 +10,15 @@ void AAAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	RunBehaviorTree(BehaviorTree);
-
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if(PlayerController)
+	if (ensureMsgf(BehaviorTree, TEXT("BehaviorTree is nullptr! Please assign a BehaviorTree in the AIController.")))
 	{
-		ACharacter* ControlledCharacter = Cast<ACharacter>(PlayerController->GetPawn());
-		GetBlackboardComponent()->SetValueAsObject("TargetActor", ControlledCharacter);
+		RunBehaviorTree(BehaviorTree);
 	}
+
+	// APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	// if(PlayerController)
+	// {
+	// 	ACharacter* ControlledCharacter = Cast<ACharacter>(PlayerController->GetPawn());
+	// 	GetBlackboardComponent()->SetValueAsObject("TargetActor", ControlledCharacter);
+	// }
 }

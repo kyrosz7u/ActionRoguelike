@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "AAICharacter.generated.h"
 
+class UPawnSensingComponent;
+
 UCLASS()
 class ACTIONROGUELIKE_API AAAICharacter : public ACharacter
 {
@@ -16,14 +18,20 @@ public:
 	AAAICharacter();
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "AI")
+	UPawnSensingComponent* PawnSensingComp;
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
+	UFUNCTION()
+	void OnSeePawn(APawn* SeenPawn);
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };
