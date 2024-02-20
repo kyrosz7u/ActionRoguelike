@@ -63,9 +63,6 @@ protected:
 	// Animation
 	UFUNCTION()
 	void OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta);
-	
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 public:	
 	// Called every frame

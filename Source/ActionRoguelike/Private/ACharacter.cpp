@@ -6,9 +6,8 @@
 #include "AItemInteractionComponent.h"
 #include "AAttributeComponent.h"
 #include "Camera/CameraComponent.h"
-#include "ACharacterAttributeUI.h"
+#include "UI/ACharacterAttributeUI.h"
 #include "DrawDebugHelpers.h"
-#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -44,20 +43,6 @@ AACharacter::AACharacter()
 	// }
 }
 
-// Called when the game starts or when spawned
-void AACharacter::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if(CharacterUIBP!=nullptr && CharacterAttributeUI == nullptr)
-	{
-		CharacterAttributeUI = NewObject<UACharacterAttributeUI>(this, CharacterUIBP);
-		AttributeComponent->OnHealthChange.AddDynamic(CharacterAttributeUI, &UACharacterAttributeUI::ApplyHealthChange);
-		AttributeComponent->ApplyHealthChanged(nullptr, 0);
-		CharacterAttributeUI->AddToViewport();
-	}
-}
-
 // Called every frame
 void AACharacter::Tick(float DeltaTime)
 {
@@ -69,6 +54,13 @@ void AACharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	AttributeComponent->OnHealthChange.AddDynamic(this, &AACharacter::OnHealthChange);
+	if(CharacterUIBP!=nullptr && CharacterAttributeUI == nullptr)
+	{
+		CharacterAttributeUI = NewObject<UACharacterAttributeUI>(this, CharacterUIBP);
+		AttributeComponent->OnHealthChange.AddDynamic(CharacterAttributeUI, &UACharacterAttributeUI::ApplyHealthChange);
+		AttributeComponent->ApplyHealthChanged(nullptr, 0);
+		CharacterAttributeUI->AddToViewport();
+	}
 }
 
 void AACharacter::MoveForward(float Value)
@@ -269,6 +261,7 @@ bool AACharacter::GetAimAt(FVector &aimAtLoc)
 void AACharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue,
 	float MaxValue, float Delta)
 {
+	GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->GetTimeSeconds());
 	if(NewValue <= 0.0f && Delta < 0.0f)
 	{
 		APlayerController* pc = Cast<APlayerController>(GetController());

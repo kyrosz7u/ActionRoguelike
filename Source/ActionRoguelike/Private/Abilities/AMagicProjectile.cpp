@@ -1,13 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AMagicProjectile.h"
+#include "Abilities/AMagicProjectile.h"
 #include "AAttributeComponent.h"
+#include "Components/AudioComponent.h"
 
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 AAMagicProjectile::AAMagicProjectile()
@@ -31,6 +33,9 @@ AAMagicProjectile::AAMagicProjectile()
 	ParticleComp = CreateDefaultSubobject<UParticleSystemComponent>("ParticleComp");
 	ParticleComp->SetupAttachment(RootComponent);
 	
+	AttachedAudioComponent = CreateDefaultSubobject<UAudioComponent>("AttachedAudioComponent");
+	AttachedAudioComponent->SetupAttachment(RootComponent);
+	
 }
 
 void AAMagicProjectile::PostInitializeComponents()
@@ -38,6 +43,10 @@ void AAMagicProjectile::PostInitializeComponents()
 	Super::PostInitializeComponents();
 	// SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AAMagicProjectile::OnComponentBeginOverlap);
 	SphereComp->OnComponentHit.AddDynamic(this, &AAMagicProjectile::OnComponentHit);
+	AttachedAudioComponent->Sound = FlySound;
+	AttachedAudioComponent->bAutoActivate = true;
+	AttachedAudioComponent->bAutoDestroy = true;
+	AttachedAudioComponent->Play();
 }
 
 // Called when the game starts or when spawned
@@ -82,6 +91,9 @@ void AAMagicProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor
 		}
 	}
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetActorLocation(), FRotator::ZeroRotator, FVector(0.5f));
+
+	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+	
 	Destroy();
 }
 

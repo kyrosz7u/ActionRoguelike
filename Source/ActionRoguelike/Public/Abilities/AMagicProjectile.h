@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AMagicProjectile.generated.h"
 
+class USoundCue;
 class UProjectileMovementComponent;
 class USphereComponent;
 class UParticleSystemComponent;
@@ -30,8 +31,17 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent *ParticleComp;
 
+	UPROPERTY(VisibleAnywhere)
+	UAudioComponent *AttachedAudioComponent;
+
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* HitParticle;
+
+	UPROPERTY(EditAnywhere, Category = "Sound Cue")
+	USoundCue *FlySound;
+	
+	UPROPERTY(EditAnywhere, Category = "Sound Cue")
+	USoundCue *HitSound;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

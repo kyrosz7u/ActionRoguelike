@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ACharacterAttributeUI.h"
+#include "UI/ACharacterAttributeUI.h"
 #include "ACharacter.h"
 
 void UACharacterAttributeUI::ApplyHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta)
