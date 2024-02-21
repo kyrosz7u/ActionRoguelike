@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AProjectileBase.h"
 #include "GameFramework/Actor.h"
 #include "ADashProjectile.generated.h"
 
@@ -10,7 +11,7 @@ class UProjectileMovementComponent;
 class USphereComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API AADashProjectile : public AActor
+class ACTIONROGUELIKE_API AADashProjectile : public AAProjectileBase
 {
 	GENERATED_BODY()
 	
@@ -19,18 +20,6 @@ public:
 	AADashProjectile();
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	USphereComponent* SphereComp;
-
-	UPROPERTY(VisibleAnywhere)
-	UProjectileMovementComponent *MovementComp;
-
-	UPROPERTY(VisibleAnywhere)
-	UParticleSystemComponent *ParticleComp;
-
-	UPROPERTY(EditAnywhere)
-	UParticleSystem* HitParticle;
-
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* TeleportEnterParticle;
 
@@ -43,13 +32,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Explode_Implementation() override;
 
-	UFUNCTION()
-	void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	                    FVector NormalImpulse, const FHitResult& Hit);
-	void DelayDash();
+public:	
 	void Teleport();
 };

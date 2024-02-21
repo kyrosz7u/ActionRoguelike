@@ -3,7 +3,7 @@
 
 #include "AItemInteractionComponent.h"
 
-#include "AGameplayInterface.h"
+#include "Actors/AGameplayInterface.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values for this component's properties
@@ -40,7 +40,6 @@ void UAItemInteractionComponent::PrimaryInteract()
 	TArray<FHitResult> hits;
 
 	FCollisionObjectQueryParams params;
-
 	FCollisionShape shape;
 	
 	FVector s;

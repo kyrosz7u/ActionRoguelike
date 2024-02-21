@@ -3,6 +3,7 @@
 
 #include "AI/AAICharacter.h"
 
+#include "AAttributeComponent.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/PawnSensingComponent.h"
@@ -15,7 +16,7 @@ AAAICharacter::AAAICharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComp");
-
+	AttributeComponent = CreateDefaultSubobject<UAAttributeComponent>("AttributeComp");
 }
 
 // Called when the game starts or when spawned

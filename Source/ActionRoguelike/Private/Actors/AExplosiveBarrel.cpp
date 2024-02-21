@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AExplosiveBarrel.h"
+#include "Actors/AExplosiveBarrel.h"
 
 #include "AAttributeComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"

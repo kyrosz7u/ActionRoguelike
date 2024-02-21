@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AAICharacter.generated.h"
 
+class UAAttributeComponent;
 class UPawnSensingComponent;
 
 UCLASS()
@@ -20,6 +21,9 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category = "AI")
 	UPawnSensingComponent* PawnSensingComp;
+
+	UPROPERTY(BlueprintReadOnly, Category="Components")
+	UAAttributeComponent *AttributeComponent;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

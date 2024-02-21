@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 AADashProjectile::AADashProjectile()
@@ -15,41 +16,30 @@ AADashProjectile::AADashProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
-	SphereComp->SetCollisionProfileName("Projectile");
-	RootComponent = SphereComp;
 	// Can't AddDynamic in Construct Function
 	// SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AAMagicProjectile::OnComponentBeginOverlap);
 	
-	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
 	MovementComp->InitialSpeed = 1500.f;
 	MovementComp->MaxSpeed = 1500.f;
 	MovementComp->ProjectileGravityScale = 0.f;
 	MovementComp->bRotationFollowsVelocity = true;
 	MovementComp->bInitialVelocityInLocalSpace = true;
 
-	ParticleComp = CreateDefaultSubobject<UParticleSystemComponent>("ParticleComp");
-	ParticleComp->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
 void AADashProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	SphereComp->OnComponentHit.AddDynamic(this, &AADashProjectile::OnComponentHit);
+	// SphereComp->OnComponentHit.AddDynamic(this, &AADashProjectile::OnComponentHit);
 	GetWorldTimerManager().SetTimer(DashDelayHandle, this, &AADashProjectile::Teleport, 0.4f, false);
 }
 
-// Called every frame
-void AADashProjectile::Tick(float DeltaTime)
+void AADashProjectile::Explode_Implementation()
 {
-	Super::Tick(DeltaTime);
-
-}
-
-void AADashProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetActorLocation(), FRotator::ZeroRotator, FVector(0.5f));
+	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+	UGameplayStatics::PlayWorldCameraShake(this, HitShake, GetActorLocation(), HitShakeInnerRadius, HitShakeOuterRadius);
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetActorLocation());
 	if(!GetWorldTimerManager().IsTimerActive(TeleportDelayHandle))
 	{
@@ -70,6 +60,12 @@ void AADashProjectile::Teleport()
 		
 		instigator->SetActorLocation(GetActorLocation());
 		instigator->SetActorRotation(rawRot);
+
+		auto pc = Cast<APlayerController>(instigator->GetInstigatorController());
+		if(pc && pc->IsLocalController())
+		{
+			pc->ClientStartCameraShake(HitShake);
+		}
 	}
 	Destroy();
 }

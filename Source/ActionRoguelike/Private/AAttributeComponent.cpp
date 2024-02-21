@@ -29,16 +29,28 @@ void UAAttributeComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-void UAAttributeComponent::ApplyHealthChanged(AActor* instigator, float delta)
+bool UAAttributeComponent::ApplyHealthChanged(AActor* instigator, float delta)
 {
 	Health += delta;
 	Health = FMath::Clamp(Health,0.0f, MaxHealth);
 	
 	OnHealthChange.Broadcast(instigator, this, Health, MaxHealth, delta);
+
+	return true;
 }
 
 bool UAAttributeComponent::IsAlive() const
 {
 	return Health > 0.0f;
+}
+
+bool UAAttributeComponent::IsHealthFull() const
+{
+	return Health == MaxHealth;
+}
+
+float UAAttributeComponent::GetHealthMax() const
+{
+	return MaxHealth;
 }
 

@@ -21,15 +21,24 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Attributes")
 	FOnAttrChanged OnHealthChange;
 
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	bool IsAlive() const;
+
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	bool IsHealthFull() const;
+
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	float GetHealthMax() const;
+
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	bool ApplyHealthChanged(AActor* instigator, float delta);
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float MaxHealth;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float Health;
-
-	UFUNCTION(BlueprintCallable, Category="Attributes")
-	bool IsAlive() const;
 	
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -37,6 +46,4 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	void ApplyHealthChanged(AActor* instigator, float delta);
 };
