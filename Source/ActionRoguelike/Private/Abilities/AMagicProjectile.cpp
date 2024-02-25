@@ -19,8 +19,8 @@ AAMagicProjectile::AAMagicProjectile()
 
 	// Can't AddDynamic in Construct Function
 	// SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AAMagicProjectile::OnComponentBeginOverlap);
-	MovementComp->InitialSpeed = 1000.f;
-	MovementComp->MaxSpeed = 1000.f;
+	MovementComp->InitialSpeed = 2000.f;
+	MovementComp->MaxSpeed = 2000.f;
 	MovementComp->ProjectileGravityScale = 0.f;
 	MovementComp->bRotationFollowsVelocity = true;
 	MovementComp->bInitialVelocityInLocalSpace = true;

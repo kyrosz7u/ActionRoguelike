@@ -17,6 +17,8 @@ AAAICharacter::AAAICharacter()
 
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComp");
 	AttributeComponent = CreateDefaultSubobject<UAAttributeComponent>("AttributeComp");
+
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 // Called when the game starts or when spawned
@@ -31,7 +33,6 @@ void AAAICharacter::PostInitializeComponents()
 	Super::PostInitializeComponents();
 	
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AAAICharacter::OnSeePawn);
-
 }
 
 // Called every frame
