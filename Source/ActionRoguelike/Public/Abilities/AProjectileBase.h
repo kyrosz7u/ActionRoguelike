@@ -16,6 +16,9 @@ class ACTIONROGUELIKE_API AAProjectileBase : public AActor
 	GENERATED_BODY()
 public:
 	UFUNCTION()
+	void SetBaseDamage(float NewBaseDamage) { BaseDamage = NewBaseDamage; }
+	
+	UFUNCTION()
 	virtual void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	                            FVector NormalImpulse, const FHitResult& Hit);
 
@@ -37,6 +40,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UAudioComponent *AttachedAudioComponent;
+
+	UPROPERTY(EditAnywhere, Category="Gameplay")
+	float BaseDamage;
 
 	UPROPERTY(EditAnywhere, Category="Effects|VFX")
 	UParticleSystem* HitParticle;

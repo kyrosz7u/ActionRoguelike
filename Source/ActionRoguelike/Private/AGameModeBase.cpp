@@ -8,6 +8,8 @@
 #include "AI/AAICharacter.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 
+DEFINE_LOG_CATEGORY(LogActionRoguelike);
+
 AAGameModeBase::AAGameModeBase()
 {
 	SpawnTimerInterval = 2.0f;
@@ -28,6 +30,25 @@ void AAGameModeBase::SpawnBots()
 		UE_LOG(LogTemp, Warning, TEXT("BotPawnClass or BotSpawn	Query is nullptr"));
 	}
 
+	auto maxBots = DifficultyCurve->GetFloatValue(GetWorld()->GetTimeSeconds());
+	float numBots = 0;
+
+	return;
+
+	for(TActorIterator<AAAICharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		auto attrCmp = (*ActorItr)->FindComponentByClass<UAAttributeComponent>();
+		if(attrCmp && attrCmp->IsAlive())
+		{
+			numBots++;
+		}
+	}
+	
+	if(numBots >= maxBots)
+	{
+		return;
+	}
+
 	auto QueryInstance = UEnvQueryManager::RunEQSQuery(this, BotSpawnQuery, this, EEnvQueryRunMode::RandomBest5Pct, nullptr);
 
 	if(QueryInstance != nullptr)
@@ -43,22 +64,6 @@ void AAGameModeBase::OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper*
 	{
 		return;
 	}
-
 	auto locations = QueryInstance->GetResultsAsLocations();
-	auto maxBots = DifficultyCurve->GetFloatValue(GetWorld()->GetTimeSeconds());
-	float numBots = 0;
-
-	for(TActorIterator<AAAICharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-	{
-		auto attrCmp = (*ActorItr)->FindComponentByClass<UAAttributeComponent>();
-		if(attrCmp && attrCmp->IsAlive())
-		{
-			numBots++;
-		}
-	}
-
-	if(numBots < maxBots)
-	{
-		GetWorld()->SpawnActor(BotPawnClass, &locations[0]);
-	}
+	GetWorld()->SpawnActor(BotPawnClass, &locations[0]);
 }

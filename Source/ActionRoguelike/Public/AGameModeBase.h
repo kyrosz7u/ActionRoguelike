@@ -7,11 +7,14 @@
 #include "GameFramework/GameModeBase.h"
 #include "AGameModeBase.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogActionRoguelike, Log, All);
+
 class AAAICharacter;
 class UEnvQuery;
 /**
  * 
  */
+
 UCLASS()
 class ACTIONROGUELIKE_API AAGameModeBase : public AGameModeBase
 {

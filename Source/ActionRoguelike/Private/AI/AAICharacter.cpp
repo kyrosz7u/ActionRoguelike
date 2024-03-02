@@ -5,7 +5,9 @@
 
 #include "AAttributeComponent.h"
 #include "AIController.h"
+#include "BrainComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
 class AAAIController;
@@ -17,15 +19,9 @@ AAAICharacter::AAAICharacter()
 
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComp");
 	AttributeComponent = CreateDefaultSubobject<UAAttributeComponent>("AttributeComp");
-
-	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-}
-
-// Called when the game starts or when spawned
-void AAAICharacter::BeginPlay()
-{
-	Super::BeginPlay();
 	
+	AttributeComponent->AttackDamage = 5.0f;
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void AAAICharacter::PostInitializeComponents()
@@ -33,20 +29,7 @@ void AAAICharacter::PostInitializeComponents()
 	Super::PostInitializeComponents();
 	
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AAAICharacter::OnSeePawn);
-}
-
-// Called every frame
-void AAAICharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void AAAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	AttributeComponent->OnHealthChange.AddDynamic(this, &AAAICharacter::OnHealthChange);
 }
 
 void AAAICharacter::OnSeePawn(APawn* SeenPawn)
@@ -60,5 +43,23 @@ void AAAICharacter::OnSeePawn(APawn* SeenPawn)
 	{
 		UBlackboardComponent* BlackboardComp = AIController->GetBlackboardComponent();
 		BlackboardComp->SetValueAsObject("TargetActor", SeenPawn);
+	}
+}
+
+void AAAICharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue,
+	float MaxValue, float Delta)
+{
+	if(Delta < 0.0f && NewValue <= 0.0f)
+	{
+		AAIController* AIController = Cast<AAIController>(GetController());
+		if(AIController)
+		{
+			AIController->GetBrainComponent()->StopLogic("Dead");
+		}
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->SetCollisionProfileName("Ragdoll");
+		GetMesh()->SetAllBodiesSimulatePhysics(true);
+
+		SetLifeSpan(10.0f);
 	}
 }

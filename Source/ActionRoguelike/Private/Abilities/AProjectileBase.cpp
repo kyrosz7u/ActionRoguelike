@@ -26,6 +26,8 @@ AAProjectileBase::AAProjectileBase()
 	
 	AttachedAudioComponent = CreateDefaultSubobject<UAudioComponent>("AttachedAudioComponent");
 	AttachedAudioComponent->SetupAttachment(RootComponent);
+
+	BaseDamage = 1.0f;
 }
 
 void AAProjectileBase::PostInitializeComponents()

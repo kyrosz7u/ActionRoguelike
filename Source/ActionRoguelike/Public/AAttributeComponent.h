@@ -21,6 +21,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Attributes")
 	FOnAttrChanged OnHealthChange;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
+	float AttackDamage;
+	
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	bool IsAlive() const;
 
@@ -40,10 +43,4 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Attributes")
 	float Health;
 	
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };

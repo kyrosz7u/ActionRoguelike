@@ -55,10 +55,10 @@ protected:
 	UAAttributeComponent *AttributeComponent;
 
 	// UI
-	UPROPERTY(EditAnywhere, Category="UI")
+	UPROPERTY(EditAnywhere, Category="AttributeUI")
 	TSubclassOf<UACharacterAttributeUI> CharacterUIBP;
-	UPROPERTY(BlueprintReadOnly, Category="UI")
-	UACharacterAttributeUI* CharacterAttributeUI;
+	UPROPERTY(BlueprintReadOnly, Category="AttributeUI")
+	UACharacterAttributeUI* CharacterAttributeUI; 
 
 	// Animation
 	UFUNCTION()

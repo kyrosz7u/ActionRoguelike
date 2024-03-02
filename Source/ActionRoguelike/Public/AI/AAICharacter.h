@@ -25,17 +25,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="Components")
 	UAAttributeComponent *AttributeComponent;
 	
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	virtual void PostInitializeComponents() override;
-
 	UFUNCTION()
 	void OnSeePawn(APawn* SeenPawn);
-	
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UFUNCTION()
+	void OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta);
+	
+	virtual void PostInitializeComponents() override;
 };

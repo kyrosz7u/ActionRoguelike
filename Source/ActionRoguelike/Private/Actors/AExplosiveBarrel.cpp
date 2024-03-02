@@ -4,6 +4,7 @@
 #include "Actors/AExplosiveBarrel.h"
 
 #include "AAttributeComponent.h"
+#include "AGameModeBase.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
@@ -45,6 +46,7 @@ void AAExplosiveBarrel::Onhit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 		UAAttributeComponent* comp = Cast<UAAttributeComponent>(OtherActor->GetComponentByClass(UAAttributeComponent::StaticClass()));
 		if(comp != nullptr)
 		{
+			UE_LOG(LogActionRoguelike, Warning, TEXT("Barrel boom! Hit %s"), *OtherActor->GetName());
 			comp->ApplyHealthChanged(this, -20.0f);
 			radialForce->FireImpulse();
 		}

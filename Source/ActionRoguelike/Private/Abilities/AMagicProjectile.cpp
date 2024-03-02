@@ -56,11 +56,10 @@ void AAMagicProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor
 		UAAttributeComponent* Comp = Cast<UAAttributeComponent>(OtherActor->GetComponentByClass(UAAttributeComponent::StaticClass()));
 		if(Comp != nullptr)
 		{
-			Comp->ApplyHealthChanged(this, -1.0f);
+			Comp->ApplyHealthChanged(this, -1.0f*BaseDamage);
 		}
 	}
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetActorLocation(), FRotator::ZeroRotator, FVector(0.5f));
-
 	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 	
 	Destroy();

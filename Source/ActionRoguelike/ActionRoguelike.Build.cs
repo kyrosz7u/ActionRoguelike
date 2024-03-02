@@ -9,7 +9,7 @@ public class ActionRoguelike : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		// 如果链接不到GameplayTasks模块，C++链接器会报错找不到函数，需要在这里添加Module
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameplayTasks", "AIModule" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "GameplayTasks", "AIModule", "NavigationSystem" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

@@ -3,7 +3,9 @@
 
 #include "AI/ABTTask_RangedAttack.h"
 
+#include "AAttributeComponent.h"
 #include "AIController.h"
+#include "Abilities/AProjectileBase.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
 
@@ -37,8 +39,14 @@ EBTNodeResult::Type UABTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& O
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParams.Instigator = AIPawn;
+		
 
-		AActor* projObj = GetWorld()->SpawnActor<AActor>(PrimaryAttackClass, MuzzleLocation, MuzzleRotation, SpawnParams);
+		AAProjectileBase* projObj = Cast<AAProjectileBase>(GetWorld()->SpawnActor<AActor>(PrimaryAttackClass, MuzzleLocation, MuzzleRotation, SpawnParams));
+		auto attrComp = AIPawn->FindComponentByClass<UAAttributeComponent>();
+		if(projObj)
+		{
+			projObj->SetBaseDamage(attrComp->AttackDamage);
+		}
 
 		return projObj ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 	}

@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 #include "UI/ACharacterAttributeUI.h"
 #include "DrawDebugHelpers.h"
+#include "Abilities/AProjectileBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -33,6 +34,7 @@ AACharacter::AACharacter()
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
+	AttributeComponent->AttackDamage = 20;
 
 	// CharacterUIBP 是在子类蓝图中设置的，父类先于子类构造，
 	// 所以在这里子类还没完成构造，CharacterUIBP没有被蓝图初始化！！！
@@ -183,7 +185,11 @@ void AACharacter::PrimaryAttack_TimeElapsed()
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;
 
-	GetWorld()->SpawnActor(PrimaryAttackClass, &SpawnTM, SpawnParams);
+	auto projObj = Cast<AAProjectileBase>(GetWorld()->SpawnActor(PrimaryAttackClass, &SpawnTM, SpawnParams));
+	if(projObj)
+	{
+		projObj->SetBaseDamage(AttributeComponent->AttackDamage);
+	}
 }
 
 void AACharacter::BlackHoleAbility_TimeElapsed()
