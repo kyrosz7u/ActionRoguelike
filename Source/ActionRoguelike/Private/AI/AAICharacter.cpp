@@ -32,34 +32,46 @@ void AAAICharacter::PostInitializeComponents()
 	AttributeComponent->OnHealthChange.AddDynamic(this, &AAAICharacter::OnHealthChange);
 }
 
-void AAAICharacter::OnSeePawn(APawn* SeenPawn)
+void AAAICharacter::SetTargetActor(APawn* NewTarget)
 {
-	// Print Pawn Name to the screen
-	UE_LOG(LogTemp, Warning, TEXT("I see %s"), *SeenPawn->GetName());
-
 	AAIController* AIController = Cast<AAIController>(GetController());
 
 	if(AIController)
 	{
 		UBlackboardComponent* BlackboardComp = AIController->GetBlackboardComponent();
-		BlackboardComp->SetValueAsObject("TargetActor", SeenPawn);
+		BlackboardComp->SetValueAsObject("TargetActor", NewTarget);
+		CachedTarget = NewTarget;
 	}
+}
+
+void AAAICharacter::OnSeePawn(APawn* SeenPawn)
+{
+	// Print Pawn Name to the screen
+	UE_LOG(LogTemp, Warning, TEXT("I see %s"), *SeenPawn->GetName());
+	SetTargetActor(SeenPawn);
 }
 
 void AAAICharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue,
 	float MaxValue, float Delta)
 {
-	if(Delta < 0.0f && NewValue <= 0.0f)
+	if(Delta < 0.0f)
 	{
-		AAIController* AIController = Cast<AAIController>(GetController());
-		if(AIController)
+		if(InstigatorActor && InstigatorActor != CachedTarget)
 		{
-			AIController->GetBrainComponent()->StopLogic("Dead");
+			SetTargetActor(Cast<APawn>(InstigatorActor));
 		}
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetMesh()->SetCollisionProfileName("Ragdoll");
-		GetMesh()->SetAllBodiesSimulatePhysics(true);
+		if(NewValue <= 0.0f)
+		{
+			AAIController* AIController = Cast<AAIController>(GetController());
+			if(AIController)
+			{
+				AIController->GetBrainComponent()->StopLogic("Dead");
+			}
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			GetMesh()->SetCollisionProfileName("Ragdoll");
+			GetMesh()->SetAllBodiesSimulatePhysics(true);
 
-		SetLifeSpan(10.0f);
+			SetLifeSpan(10.0f);
+		}
 	}
 }

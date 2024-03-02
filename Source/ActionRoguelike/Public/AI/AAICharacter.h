@@ -32,4 +32,7 @@ protected:
 	void OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta);
 	
 	virtual void PostInitializeComponents() override;
+	void SetTargetActor(APawn* NewTarget);
+
+	APawn* CachedTarget;
 };
