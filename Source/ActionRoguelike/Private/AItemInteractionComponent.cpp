@@ -5,6 +5,7 @@
 
 #include "Actors/AGameplayInterface.h"
 #include "DrawDebugHelpers.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values for this component's properties
 UAItemInteractionComponent::UAItemInteractionComponent()
@@ -16,44 +17,25 @@ UAItemInteractionComponent::UAItemInteractionComponent()
 	// ...
 }
 
-
-// Called when the game starts
-void UAItemInteractionComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
-// Called every frame
-void UAItemInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
 void UAItemInteractionComponent::PrimaryInteract()
 {
 	TArray<FHitResult> hits;
-
-	FCollisionObjectQueryParams params;
 	FCollisionShape shape;
-	
 	FVector s;
-	FRotator r;
 
 	auto o =GetOwner();
-	o->GetActorEyesViewPoint(s, r);
+	auto CameraComp = o->FindComponentByClass<UCameraComponent>();
+	if(CameraComp == nullptr)
+	{
+		return ;
+	}
 
-	FVector e = s + r.Vector() * 1000;
+	s = CameraComp->GetComponentLocation();
+	FVector e = s + CameraComp->GetForwardVector() * 1000;
 	
+	FCollisionObjectQueryParams params;
 	params.AddObjectTypesToQuery(ECC_WorldDynamic);
 	
-	// GetWorld()->LineTraceSingleByObjectType(hit, s, e, params);
-
 	GetWorld()->SweepMultiByObjectType(hits, s, e, FQuat::Identity, params, shape);
 
 	for(auto hit: hits)
@@ -71,7 +53,6 @@ void UAItemInteractionComponent::PrimaryInteract()
 		}
 	}
 
-	// FColor lineColor = 
-	DrawDebugLine(GetWorld(), s, e, FColor::Red, false, 2.0f, 0, 1.0f);
+	// DrawDebugLine(GetWorld(), s, e, FColor::Red, false, 2.0f, 0, 1.0f);
 }
 

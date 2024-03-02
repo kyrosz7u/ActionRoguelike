@@ -17,6 +17,9 @@ class ACTIONROGUELIKE_API AAProjectileBase : public AActor
 public:
 	UFUNCTION()
 	void SetBaseDamage(float NewBaseDamage) { BaseDamage = NewBaseDamage; }
+
+	UFUNCTION()
+	void SetProjectileMovementSpeed(float NewSpeed);
 	
 	UFUNCTION()
 	virtual void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,

@@ -33,8 +33,6 @@ void AAGameModeBase::SpawnBots()
 	auto maxBots = DifficultyCurve->GetFloatValue(GetWorld()->GetTimeSeconds());
 	float numBots = 0;
 
-	return;
-
 	for(TActorIterator<AAAICharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
 		auto attrCmp = (*ActorItr)->FindComponentByClass<UAAttributeComponent>();
@@ -49,7 +47,7 @@ void AAGameModeBase::SpawnBots()
 		return;
 	}
 
-	auto QueryInstance = UEnvQueryManager::RunEQSQuery(this, BotSpawnQuery, this, EEnvQueryRunMode::RandomBest5Pct, nullptr);
+	auto QueryInstance = UEnvQueryManager::RunEQSQuery(this, BotSpawnQuery, this, EEnvQueryRunMode::RandomBest25Pct, nullptr);
 
 	if(QueryInstance != nullptr)
 	{

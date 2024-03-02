@@ -31,6 +31,9 @@ EBTNodeResult::Type UABTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& O
 		FVector Direction = TargetActor->GetActorLocation() - MuzzleLocation;
 		FRotator MuzzleRotation = Direction.Rotation();
 
+		MuzzleRotation.Pitch += FMath::FRandRange(-MaxBulletSpread, MaxBulletSpread);
+		MuzzleRotation.Yaw += FMath::FRandRange(-MaxBulletSpread, MaxBulletSpread);
+
 		// auto rot = UKismetMathLibrary::MakeRotFromX(Direction);
 		// auto rawRot = AIPawn->GetActorRotation();
 		// rawRot.Yaw = rot.Yaw;
@@ -40,12 +43,12 @@ EBTNodeResult::Type UABTTask_RangedAttack::ExecuteTask(UBehaviorTreeComponent& O
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParams.Instigator = AIPawn;
 		
-
 		AAProjectileBase* projObj = Cast<AAProjectileBase>(GetWorld()->SpawnActor<AActor>(PrimaryAttackClass, MuzzleLocation, MuzzleRotation, SpawnParams));
 		auto attrComp = AIPawn->FindComponentByClass<UAAttributeComponent>();
 		if(projObj)
 		{
 			projObj->SetBaseDamage(attrComp->AttackDamage);
+			projObj->SetProjectileMovementSpeed(FlySpeed);
 		}
 
 		return projObj ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;

@@ -18,6 +18,10 @@ public:
 	// Sets default values for this component's properties
 	UAAttributeComponent();
 
+	static UAAttributeComponent* GetAttributes(AActor* FromActor);
+
+	static bool isActorAlive(AActor* Actor);
+
 	UPROPERTY(BlueprintAssignable, Category="Attributes")
 	FOnAttrChanged OnHealthChange;
 

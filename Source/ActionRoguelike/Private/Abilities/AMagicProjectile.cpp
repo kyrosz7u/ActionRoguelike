@@ -3,6 +3,7 @@
 
 #include "Abilities/AMagicProjectile.h"
 #include "AAttributeComponent.h"
+#include "ACharacter.h"
 #include "Components/AudioComponent.h"
 
 #include "Components/SphereComponent.h"
@@ -61,6 +62,16 @@ void AAMagicProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor
 	}
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetActorLocation(), FRotator::ZeroRotator, FVector(0.5f));
 	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+
+	const auto PlayerCharacter = Cast<ACharacter>(OtherActor);
+	if(PlayerCharacter)
+	{
+		auto pc = Cast<APlayerController>(PlayerCharacter->GetController());
+		if(pc && pc->IsLocalController())
+		{
+			pc->ClientStartCameraShake(HitShake);
+		}
+	}
 	
 	Destroy();
 }

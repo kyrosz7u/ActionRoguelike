@@ -11,6 +11,16 @@ UAAttributeComponent::UAAttributeComponent()
 	MaxHealth = 100.f;
 }
 
+UAAttributeComponent* UAAttributeComponent::GetAttributes(AActor* FromActor)
+{
+	return FromActor->FindComponentByClass<UAAttributeComponent>();
+}
+
+bool UAAttributeComponent::isActorAlive(AActor* Actor)
+{
+	return GetAttributes(Actor)->IsAlive();
+}
+
 bool UAAttributeComponent::ApplyHealthChanged(AActor* instigator, float delta)
 {
 	Health += delta;

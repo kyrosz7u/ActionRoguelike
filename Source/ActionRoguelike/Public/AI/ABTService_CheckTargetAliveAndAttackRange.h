@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTService.h"
-#include "ABTService_CheckAttackRange.generated.h"
+#include "ABTService_CheckTargetAliveAndAttackRange.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ACTIONROGUELIKE_API UABTService_CheckAttackRange : public UBTService
+class ACTIONROGUELIKE_API UABTService_CheckTargetAliveAndAttackRange : public UBTService
 {
 	GENERATED_BODY()
 
@@ -21,6 +21,10 @@ protected:
 	// 通过这样可以访问到blackboard中的值
 	UPROPERTY(EditAnywhere, Category="BBKey")
 	FBlackboardKeySelector WithinAttackRangeKey;
+
+	// TargetActor是否存活
+	UPROPERTY(EditAnywhere, Category="BBKey")
+	FBlackboardKeySelector IsTargetAliveKey;
 	
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;	
 };

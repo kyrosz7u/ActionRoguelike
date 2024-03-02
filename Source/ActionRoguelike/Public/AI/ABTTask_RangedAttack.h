@@ -17,6 +17,12 @@ class ACTIONROGUELIKE_API UABTTask_RangedAttack : public UBTTaskNode
 protected:
 	UPROPERTY(EditAnywhere, Category="AI")
 	TSubclassOf<AActor> PrimaryAttackClass;
+
+	UPROPERTY(EditAnywhere, Category="AI")
+	float FlySpeed = 1000.0f;
+
+	UPROPERTY(EditAnywhere, Category="AI")
+	float MaxBulletSpread = 3.0f;
 	
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };

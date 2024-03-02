@@ -1,12 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AI/ABTService_CheckAttackRange.h"
+#include "AI/ABTService_CheckTargetAliveAndAttackRange.h"
 
+#include "AAttributeComponent.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-void UABTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+void UABTService_CheckTargetAliveAndAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
@@ -26,6 +27,19 @@ void UABTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, u
 			}
 			
 			BlackboardComp->SetValueAsBool(WithinAttackRangeKey.SelectedKeyName, bWithinAttackRange&&bInsignt);
+		}
+		else
+		{
+			BlackboardComp->SetValueAsBool(WithinAttackRangeKey.SelectedKeyName, false);
+		}
+
+		if(TargetCharacter == nullptr)
+		{
+			BlackboardComp->SetValueAsBool(IsTargetAliveKey.SelectedKeyName, false);
+		}
+		else
+		{
+			BlackboardComp->SetValueAsBool(IsTargetAliveKey.SelectedKeyName, UAAttributeComponent::isActorAlive(TargetCharacter));
 		}
 	}
 }

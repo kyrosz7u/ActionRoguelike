@@ -40,10 +40,17 @@ void AAProjectileBase::PostInitializeComponents()
 	AttachedAudioComponent->Play();
 
 	SphereComp->OnComponentHit.AddDynamic(this, &AAProjectileBase::OnComponentHit);
+	SphereComp->IgnoreActorWhenMoving(GetInstigator(), true);
+}
+
+void AAProjectileBase::SetProjectileMovementSpeed(float NewSpeed)
+{
+	MovementComp->InitialSpeed = NewSpeed;
+	MovementComp->MaxSpeed = NewSpeed;
 }
 
 void AAProjectileBase::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+                                      UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	Explode();
 }
