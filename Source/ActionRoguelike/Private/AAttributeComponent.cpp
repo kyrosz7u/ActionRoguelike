@@ -23,6 +23,10 @@ bool UAAttributeComponent::isActorAlive(AActor* Actor)
 
 bool UAAttributeComponent::ApplyHealthChanged(AActor* instigator, float delta)
 {
+	if(!GetOwner()->CanBeDamaged())
+	{
+		return false;
+	}
 	Health += delta;
 	Health = FMath::Clamp(Health,0.0f, MaxHealth);
 	
@@ -36,6 +40,11 @@ bool UAAttributeComponent::IsAlive() const
 	return Health > 1.0f;
 }
 
+bool UAAttributeComponent::Kill(AActor* instigator)
+{
+	return ApplyHealthChanged(instigator, -MaxHealth);
+}
+
 bool UAAttributeComponent::IsHealthFull() const
 {
 	return Health == MaxHealth;
@@ -44,6 +53,11 @@ bool UAAttributeComponent::IsHealthFull() const
 float UAAttributeComponent::GetHealthMax() const
 {
 	return MaxHealth;
+}
+
+float UAAttributeComponent::GetHealthPercent() const
+{
+	return Health / MaxHealth;
 }
 
 

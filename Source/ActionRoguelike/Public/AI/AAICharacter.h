@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/TimelineComponent.h"
 #include "GameFramework/Character.h"
 #include "AAICharacter.generated.h"
 
+class UTimelineComponent;
+class UAWorldAttributeBarUI;
 class UAAttributeComponent;
 class UPawnSensingComponent;
 
@@ -24,15 +27,33 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category="Components")
 	UAAttributeComponent *AttributeComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category="UI")
+	TSubclassOf<UUserWidget> HealthBarClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="Effect")
+	UCurveFloat *DeadDissolveCurve;
+
+	UPROPERTY(EditDefaultsOnly, Category="Effect")
+	float DeadDissolveTime = 5.0f;
 	
 	UFUNCTION()
 	void OnSeePawn(APawn* SeenPawn);
 
 	UFUNCTION()
+	void HandleDissolveProgress(float Ratio);
+
+	UFUNCTION()
 	void OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta);
 	
-	virtual void PostInitializeComponents() override;
 	void SetTargetActor(APawn* NewTarget);
+	
+	virtual void PostInitializeComponents() override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
+private:
 	APawn* CachedTarget;
+	UAWorldAttributeBarUI* ActiveHealthBar;
+	FTimeline  DeadDissolveTimeline;
 };

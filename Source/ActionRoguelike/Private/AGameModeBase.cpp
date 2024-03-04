@@ -22,6 +22,18 @@ void AAGameModeBase::StartPlay()
 	GetWorldTimerManager().SetTimer(TimerHandle_SpawnBots, this, &AAGameModeBase::SpawnBots, SpawnTimerInterval, true);
 }
 
+void AAGameModeBase::KillAll()
+{
+	for(TActorIterator<AAAICharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		const auto AttrCmp = (*ActorItr)->FindComponentByClass<UAAttributeComponent>();
+		if(ensure(AttrCmp) && AttrCmp->IsAlive())
+		{
+			AttrCmp->Kill(this);
+		}
+	}
+}
+
 
 void AAGameModeBase::SpawnBots()
 {
@@ -30,19 +42,19 @@ void AAGameModeBase::SpawnBots()
 		UE_LOG(LogTemp, Warning, TEXT("BotPawnClass or BotSpawn	Query is nullptr"));
 	}
 
-	auto maxBots = DifficultyCurve->GetFloatValue(GetWorld()->GetTimeSeconds());
-	float numBots = 0;
+	const auto MaxBots = DifficultyCurve->GetFloatValue(GetWorld()->GetTimeSeconds());
+	float NumBots = 0;
 
 	for(TActorIterator<AAAICharacter> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
-		auto attrCmp = (*ActorItr)->FindComponentByClass<UAAttributeComponent>();
-		if(attrCmp && attrCmp->IsAlive())
+		const auto AttrCmp = (*ActorItr)->FindComponentByClass<UAAttributeComponent>();
+		if(AttrCmp && AttrCmp->IsAlive())
 		{
-			numBots++;
+			NumBots++;
 		}
 	}
 	
-	if(numBots >= maxBots)
+	if(NumBots >= MaxBots)
 	{
 		return;
 	}

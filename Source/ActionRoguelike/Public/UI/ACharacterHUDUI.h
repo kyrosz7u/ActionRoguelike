@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "ACharacterAttributeUI.generated.h"
+#include "ACharacterHUDUI.generated.h"
 
 class AACharacter;
 class UAAttributeComponent;
@@ -13,7 +13,7 @@ class UAAttributeComponent;
  * 
  */
 UCLASS()
-class ACTIONROGUELIKE_API UACharacterAttributeUI : public UUserWidget
+class ACTIONROGUELIKE_API UACharacterHUDUI : public UUserWidget
 {
 	GENERATED_BODY()
     

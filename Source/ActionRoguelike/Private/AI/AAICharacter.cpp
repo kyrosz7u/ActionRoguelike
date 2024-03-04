@@ -7,8 +7,11 @@
 #include "AIController.h"
 #include "BrainComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/CapsuleComponent.h"
 #include "Perception/PawnSensingComponent.h"
+#include "../../Public/UI/AWorldAttributeBarUI.h"
+#include "Components/TimelineComponent.h"
 
 class AAAIController;
 // Sets default values
@@ -30,6 +33,28 @@ void AAAICharacter::PostInitializeComponents()
 	
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AAAICharacter::OnSeePawn);
 	AttributeComponent->OnHealthChange.AddDynamic(this, &AAAICharacter::OnHealthChange);
+
+	FOnTimelineFloat onTimelineCallback;
+	onTimelineCallback.BindUFunction(this, FName("HandleDissolveProgress"));
+
+	if(DeadDissolveCurve!=nullptr)
+	{
+		float TimelineLength = DeadDissolveTimeline.GetTimelineLength();
+		DeadDissolveTimeline.AddInterpFloat(DeadDissolveCurve, onTimelineCallback);
+		DeadDissolveTimeline.SetTimelineLengthMode(TL_LastKeyFrame);
+		DeadDissolveTimeline.SetPlayRate(1.0f / DeadDissolveTime);
+		DeadDissolveTimeline.SetLooping(false);
+	}
+}
+
+void AAAICharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if(DeadDissolveTimeline.IsPlaying())
+	{
+		DeadDissolveTimeline.TickTimeline(DeltaSeconds);
+	}
 }
 
 void AAAICharacter::SetTargetActor(APawn* NewTarget)
@@ -47,8 +72,13 @@ void AAAICharacter::SetTargetActor(APawn* NewTarget)
 void AAAICharacter::OnSeePawn(APawn* SeenPawn)
 {
 	// Print Pawn Name to the screen
-	UE_LOG(LogTemp, Warning, TEXT("I see %s"), *SeenPawn->GetName());
+	// UE_LOG(LogTemp, Warning, TEXT("I see %s"), *SeenPawn->GetName());
 	SetTargetActor(SeenPawn);
+}
+
+void AAAICharacter::HandleDissolveProgress(float Ratio)
+{
+	GetMesh()->SetScalarParameterValueOnMaterials("DissolveAmount", Ratio);
 }
 
 void AAAICharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue,
@@ -60,18 +90,39 @@ void AAAICharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent
 		{
 			SetTargetActor(Cast<APawn>(InstigatorActor));
 		}
-		if(NewValue <= 0.0f)
-		{
-			AAIController* AIController = Cast<AAIController>(GetController());
-			if(AIController)
-			{
-				AIController->GetBrainComponent()->StopLogic("Dead");
-			}
-			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			GetMesh()->SetCollisionProfileName("Ragdoll");
-			GetMesh()->SetAllBodiesSimulatePhysics(true);
 
-			SetLifeSpan(10.0f);
+		if(!IsValid(ActiveHealthBar))
+		{
+			if(HealthBarClass != nullptr)
+			{
+				ActiveHealthBar = CreateWidget<UAWorldAttributeBarUI>(GetWorld(), HealthBarClass);
+				ActiveHealthBar->AttachedActor = this;
+				ActiveHealthBar->AddToViewport();
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("HealthBarClass Of AAICharacter is nullptr"));
+			}
 		}
+		else if(ActiveHealthBar->Visibility == ESlateVisibility::Collapsed)
+		{
+			ActiveHealthBar->SetVisibility(ESlateVisibility::Visible);
+		}
+		
+	}
+	if(NewValue <= 0.0f)
+	{
+		AAIController* AIController = Cast<AAIController>(GetController());
+		if(AIController)
+		{
+			AIController->GetBrainComponent()->StopLogic("Dead");
+		}
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->SetCollisionProfileName("Ragdoll");
+		GetMesh()->SetAllBodiesSimulatePhysics(true);
+		ActiveHealthBar->SetVisibility(ESlateVisibility::Collapsed);
+
+		SetLifeSpan(DeadDissolveTime);
+		DeadDissolveTimeline.PlayFromStart();
 	}
 }

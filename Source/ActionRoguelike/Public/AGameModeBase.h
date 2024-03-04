@@ -23,6 +23,10 @@ public:
 	AAGameModeBase();
 
 	virtual void StartPlay() override;
+
+	UFUNCTION(Exec)
+	void KillAll();
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "GamePlay")
 	UCurveFloat *DifficultyCurve;

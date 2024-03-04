@@ -6,7 +6,7 @@
 #include "AItemInteractionComponent.h"
 #include "AAttributeComponent.h"
 #include "Camera/CameraComponent.h"
-#include "UI/ACharacterAttributeUI.h"
+#include "UI/ACharacterHUDUI.h"
 #include "DrawDebugHelpers.h"
 #include "Abilities/AProjectileBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -56,12 +56,12 @@ void AACharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	AttributeComponent->OnHealthChange.AddDynamic(this, &AACharacter::OnHealthChange);
-	if(CharacterUIBP!=nullptr && CharacterAttributeUI == nullptr)
+	if(MainHUDUIBP!=nullptr && MainHUDUI == nullptr)
 	{
-		CharacterAttributeUI = NewObject<UACharacterAttributeUI>(this, CharacterUIBP);
-		AttributeComponent->OnHealthChange.AddDynamic(CharacterAttributeUI, &UACharacterAttributeUI::ApplyHealthChange);
+		MainHUDUI = NewObject<UACharacterHUDUI>(this, MainHUDUIBP);
+		AttributeComponent->OnHealthChange.AddDynamic(MainHUDUI, &UACharacterHUDUI::ApplyHealthChange);
 		AttributeComponent->ApplyHealthChanged(nullptr, 0);
-		CharacterAttributeUI->AddToViewport();
+		MainHUDUI->AddToViewport();
 	}
 }
 

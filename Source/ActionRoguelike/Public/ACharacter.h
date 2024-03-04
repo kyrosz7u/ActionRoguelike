@@ -8,7 +8,7 @@
 #include "GameFramework/Character.h"
 #include "ACharacter.generated.h"
 
-class UACharacterAttributeUI;
+class UACharacterHUDUI;
 class UAItemInteractionComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -56,9 +56,7 @@ protected:
 
 	// UI
 	UPROPERTY(EditAnywhere, Category="AttributeUI")
-	TSubclassOf<UACharacterAttributeUI> CharacterUIBP;
-	UPROPERTY(BlueprintReadOnly, Category="AttributeUI")
-	UACharacterAttributeUI* CharacterAttributeUI; 
+	TSubclassOf<UACharacterHUDUI> MainHUDUIBP;
 
 	// Animation
 	UFUNCTION()
@@ -82,4 +80,7 @@ public:
 	void BlackHoleAbility_TimeElapsed();
 	void DashAbility_TimeElapsed();
 	bool GetAimAt(FVector& aimAtLoc);
+
+private:
+	UACharacterHUDUI* MainHUDUI;
 };
