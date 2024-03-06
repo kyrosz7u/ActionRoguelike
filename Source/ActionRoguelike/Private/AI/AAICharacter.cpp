@@ -47,6 +47,14 @@ void AAAICharacter::PostInitializeComponents()
 	}
 }
 
+void AAAICharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	AAIController* AIController = Cast<AAIController>(GetController());
+	ControllerBBCopm = AIController->GetBlackboardComponent();
+}
+
 void AAAICharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -59,12 +67,9 @@ void AAAICharacter::Tick(float DeltaSeconds)
 
 void AAAICharacter::SetTargetActor(APawn* NewTarget)
 {
-	AAIController* AIController = Cast<AAIController>(GetController());
-
-	if(AIController)
+	if(ControllerBBCopm)
 	{
-		UBlackboardComponent* BlackboardComp = AIController->GetBlackboardComponent();
-		BlackboardComp->SetValueAsObject("TargetActor", NewTarget);
+		ControllerBBCopm->SetValueAsObject("TargetActor", NewTarget);
 		CachedTarget = NewTarget;
 	}
 }
@@ -108,8 +113,8 @@ void AAAICharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent
 		{
 			ActiveHealthBar->SetVisibility(ESlateVisibility::Visible);
 		}
-		
 	}
+	
 	if(NewValue <= 0.0f)
 	{
 		AAIController* AIController = Cast<AAIController>(GetController());
@@ -124,5 +129,14 @@ void AAAICharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent
 
 		SetLifeSpan(DeadDissolveTime);
 		DeadDissolveTimeline.PlayFromStart();
+	}
+
+	if(AttributeComponent->GetHealthPercent() < 0.41f)
+	{
+		ControllerBBCopm->SetValueAsBool("LowHealth", true);
+	}
+	else
+	{
+		ControllerBBCopm->SetValueAsBool("LowHealth", false);
 	}
 }

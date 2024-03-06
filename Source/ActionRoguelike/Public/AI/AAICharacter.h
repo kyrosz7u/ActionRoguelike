@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "AAICharacter.generated.h"
 
+class UBlackboardComponent;
 class UTimelineComponent;
 class UAWorldAttributeBarUI;
 class UAAttributeComponent;
@@ -49,6 +50,7 @@ protected:
 	void SetTargetActor(APawn* NewTarget);
 	
 	virtual void PostInitializeComponents() override;
+	void BeginPlay();
 
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -56,4 +58,5 @@ private:
 	APawn* CachedTarget;
 	UAWorldAttributeBarUI* ActiveHealthBar;
 	FTimeline  DeadDissolveTimeline;
+	UBlackboardComponent* ControllerBBCopm;
 };

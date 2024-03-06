@@ -35,6 +35,12 @@ bool UAAttributeComponent::ApplyHealthChanged(AActor* instigator, float delta)
 	return true;
 }
 
+bool UAAttributeComponent::FulfillHealth()
+{
+	Health = MaxHealth;
+	return true;
+}
+
 bool UAAttributeComponent::IsAlive() const
 {
 	return Health > 1.0f;
