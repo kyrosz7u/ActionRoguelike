@@ -2,7 +2,7 @@
 
 
 #include "Actors/AHealthPowerUpActor.h"
-#include "AAttributeComponent.h"
+#include "GamePlay/AAttributeComponent.h"
 
 void AAHealthPowerUpActor::Interact_Implementation(APawn* InstigatorPawn)
 {

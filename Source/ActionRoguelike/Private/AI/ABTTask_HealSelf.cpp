@@ -3,7 +3,7 @@
 
 #include "AI/ABTTask_HealSelf.h"
 
-#include "AAttributeComponent.h"
+#include "GamePlay/AAttributeComponent.h"
 #include "AIController.h"
 #include "GameFramework/Character.h"
 

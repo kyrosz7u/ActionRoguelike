@@ -3,7 +3,7 @@
 
 #include "AI/ABTService_CheckTargetAliveAndAttackRange.h"
 
-#include "AAttributeComponent.h"
+#include "GamePlay/AAttributeComponent.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 

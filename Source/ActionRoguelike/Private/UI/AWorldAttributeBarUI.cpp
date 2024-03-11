@@ -3,7 +3,7 @@
 
 #include "..\..\Public\UI\AWorldAttributeBarUI.h"
 
-#include "AAttributeComponent.h"
+#include "GamePlay/AAttributeComponent.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"

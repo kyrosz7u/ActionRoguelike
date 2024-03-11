@@ -1,11 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AItemInteractionComponent.h"
+#include "GamePlay/AItemInteractionComponent.h"
 
 #include "Actors/AGameplayInterface.h"
 #include "DrawDebugHelpers.h"
 #include "Camera/CameraComponent.h"
+
+static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("su.InteractionDebugDraw"), false, TEXT("Enable Debug Lines for Interact Component."), ECVF_Cheat);
 
 // Sets default values for this component's properties
 UAItemInteractionComponent::UAItemInteractionComponent()
@@ -19,6 +21,8 @@ UAItemInteractionComponent::UAItemInteractionComponent()
 
 void UAItemInteractionComponent::PrimaryInteract()
 {
+	bool bDebugDraw = CVarDebugDrawInteraction.GetValueOnGameThread();
+	
 	TArray<FHitResult> hits;
 	FCollisionShape shape;
 	FVector s;
@@ -47,12 +51,17 @@ void UAItemInteractionComponent::PrimaryInteract()
 			if(a->Implements<UAGameplayInterface>())
 			{
 				IAGameplayInterface::Execute_Interact(a, Cast<APawn>(o));
-				// DrawDebugSphere(GetWorld(), hit.ImpactPoint, 10.0f, 32, FColor::Blue, false, 2.0f);
+				if(bDebugDraw)
+				{
+					DrawDebugSphere(GetWorld(), hit.ImpactPoint, 10.0f, 32, FColor::Blue, false, 2.0f);
+				}
 				break;
 			}
 		}
 	}
-
-	// DrawDebugLine(GetWorld(), s, e, FColor::Red, false, 2.0f, 0, 1.0f);
+	if(bDebugDraw)
+	{
+		DrawDebugLine(GetWorld(), s, e, FColor::Red, false, 2.0f, 0, 1.0f);
+	}
 }
 

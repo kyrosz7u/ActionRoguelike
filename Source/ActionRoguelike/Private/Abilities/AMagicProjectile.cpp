@@ -2,15 +2,12 @@
 
 
 #include "Abilities/AMagicProjectile.h"
-#include "AAttributeComponent.h"
+#include "GamePlay/AAttributeComponent.h"
+#include "GamePlay/AGameplayFunctionLibrary.h"
 #include "ACharacter.h"
-#include "Components/AudioComponent.h"
 
-#include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Particles/ParticleSystemComponent.h"
-#include "Sound/SoundCue.h"
+
 
 // Sets default values
 AAMagicProjectile::AAMagicProjectile()
@@ -52,27 +49,25 @@ void AAMagicProjectile::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedC
 void AAMagicProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (OtherActor)
+	if (OtherActor && OtherActor != GetInstigator())
 	{
 		UAAttributeComponent* Comp = Cast<UAAttributeComponent>(OtherActor->GetComponentByClass(UAAttributeComponent::StaticClass()));
 		if(Comp != nullptr)
 		{
-			Comp->ApplyHealthChanged(GetInstigator(), -1.0f*BaseDamage);
+			if(UAGameplayFunctionLibrary::ApplyDirectionalDamage(this, OtherActor, BaseDamage, Hit))
+			{
+				const auto PlayerCharacter = Cast<ACharacter>(OtherActor);
+				if(PlayerCharacter)
+				{
+					auto pc = Cast<APlayerController>(PlayerCharacter->GetController());
+					if(pc && pc->IsLocalController())
+					{
+						pc->ClientStartCameraShake(HitShake);
+					}
+				}
+			}
 		}
 	}
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetActorLocation(), FRotator::ZeroRotator, FVector(0.5f));
-	UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
-
-	const auto PlayerCharacter = Cast<ACharacter>(OtherActor);
-	if(PlayerCharacter)
-	{
-		auto pc = Cast<APlayerController>(PlayerCharacter->GetController());
-		if(pc && pc->IsLocalController())
-		{
-			pc->ClientStartCameraShake(HitShake);
-		}
-	}
-	
-	Destroy();
+	Explode();
 }
 

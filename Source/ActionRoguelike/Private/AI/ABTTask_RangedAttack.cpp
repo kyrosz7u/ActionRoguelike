@@ -3,7 +3,7 @@
 
 #include "AI/ABTTask_RangedAttack.h"
 
-#include "AAttributeComponent.h"
+#include "GamePlay/AAttributeComponent.h"
 #include "AIController.h"
 #include "Abilities/AProjectileBase.h"
 #include "BehaviorTree/BlackboardComponent.h"

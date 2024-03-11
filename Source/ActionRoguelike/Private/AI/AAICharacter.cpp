@@ -3,7 +3,7 @@
 
 #include "AI/AAICharacter.h"
 
-#include "AAttributeComponent.h"
+#include "GamePlay/AAttributeComponent.h"
 #include "AIController.h"
 #include "BrainComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -25,6 +25,8 @@ AAAICharacter::AAAICharacter()
 	
 	AttributeComponent->AttackDamage = 5.0f;
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	GetMesh()->SetGenerateOverlapEvents(true);
 }
 
 void AAAICharacter::PostInitializeComponents()

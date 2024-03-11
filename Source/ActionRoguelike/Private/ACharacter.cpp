@@ -3,11 +3,10 @@
 
 #include "ACharacter.h"
 
-#include "AItemInteractionComponent.h"
-#include "AAttributeComponent.h"
-#include "AGameModeBase.h"
+#include "GamePlay/AItemInteractionComponent.h"
+#include "GamePlay/AAttributeComponent.h"
+#include "GamePlay/AGameModeBase.h"
 #include "Camera/CameraComponent.h"
-#include "UI/ACharacterHUDUI.h"
 #include "DrawDebugHelpers.h"
 #include "Abilities/AProjectileBase.h"
 #include "GameFramework/CharacterMovementComponent.h"

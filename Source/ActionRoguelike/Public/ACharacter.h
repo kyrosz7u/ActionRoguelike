@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AAttributeComponent.h"
+#include "GamePlay/AAttributeComponent.h"
 
 #include "GameFramework/Character.h"
 #include "ACharacter.generated.h"

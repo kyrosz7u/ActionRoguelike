@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AGameModeBase.h"
+#include "GamePlay/AGameModeBase.h"
 
-#include "AAttributeComponent.h"
+#include "GamePlay/AAttributeComponent.h"
 #include "EngineUtils.h"
 #include "AI/AAICharacter.h"
 #include "EnvironmentQuery/EnvQueryManager.h"

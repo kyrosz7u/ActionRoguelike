@@ -3,8 +3,8 @@
 
 #include "Actors/AExplosiveBarrel.h"
 
-#include "AAttributeComponent.h"
-#include "AGameModeBase.h"
+#include "GamePlay/AAttributeComponent.h"
+#include "GamePlay/AGameModeBase.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
