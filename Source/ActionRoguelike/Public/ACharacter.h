@@ -54,17 +54,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="Components")
 	UAAttributeComponent *AttributeComponent;
 
-	// UI
-	UPROPERTY(EditAnywhere, Category="AttributeUI")
-	TSubclassOf<UACharacterHUDUI> MainHUDUIBP;
-
 	// Animation
 	UFUNCTION()
 	void OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta);
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 	virtual void PostInitializeComponents() override;
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -82,5 +76,5 @@ public:
 	bool GetAimAt(FVector& aimAtLoc);
 
 private:
-	UACharacterHUDUI* MainHUDUI;
+	bool bHasDied = false;
 };

@@ -39,7 +39,7 @@ void UABTService_CheckTargetAliveAndAttackRange::TickNode(UBehaviorTreeComponent
 		}
 		else
 		{
-			BlackboardComp->SetValueAsBool(IsTargetAliveKey.SelectedKeyName, UAAttributeComponent::isActorAlive(TargetCharacter));
+			BlackboardComp->SetValueAsBool(IsTargetAliveKey.SelectedKeyName, UAAttributeComponent::IsActorAlive(TargetCharacter));
 		}
 	}
 }

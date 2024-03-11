@@ -59,4 +59,10 @@ void UAWorldAttributeBarUI::HideWidget()
 	SetVisibility(ESlateVisibility::Collapsed);
 }
 
+void UAWorldAttributeBarUI::PopUp()
+{
+	SetVisibility(ESlateVisibility::Visible);
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UAWorldAttributeBarUI::HideWidget, 2.0f, false);
+}
 

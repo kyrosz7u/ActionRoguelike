@@ -16,14 +16,14 @@ UAAttributeComponent* UAAttributeComponent::GetAttributes(AActor* FromActor)
 	return FromActor->FindComponentByClass<UAAttributeComponent>();
 }
 
-bool UAAttributeComponent::isActorAlive(AActor* Actor)
+bool UAAttributeComponent::IsActorAlive(AActor* Actor)
 {
 	return GetAttributes(Actor)->IsAlive();
 }
 
 bool UAAttributeComponent::ApplyHealthChanged(AActor* instigator, float delta)
 {
-	if(!GetOwner()->CanBeDamaged())
+	if(!GetOwner()->CanBeDamaged() || !IsAlive())
 	{
 		return false;
 	}
@@ -31,6 +31,10 @@ bool UAAttributeComponent::ApplyHealthChanged(AActor* instigator, float delta)
 	Health = FMath::Clamp(Health,0.0f, MaxHealth);
 	
 	OnHealthChange.Broadcast(instigator, this, Health, MaxHealth, delta);
+	if(OnUIHealthChanged.IsBound())
+	{
+		OnUIHealthChanged.Execute(instigator, this, Health, MaxHealth, delta);
+	}
 
 	return true;
 }
@@ -43,7 +47,7 @@ bool UAAttributeComponent::FulfillHealth()
 
 bool UAAttributeComponent::IsAlive() const
 {
-	return Health > 1.0f;
+	return Health > 1e-2f;
 }
 
 bool UAAttributeComponent::Kill(AActor* instigator)
@@ -54,6 +58,11 @@ bool UAAttributeComponent::Kill(AActor* instigator)
 bool UAAttributeComponent::IsHealthFull() const
 {
 	return Health == MaxHealth;
+}
+
+float UAAttributeComponent::GetHealth() const
+{
+	return Health;
 }
 
 float UAAttributeComponent::GetHealthMax() const

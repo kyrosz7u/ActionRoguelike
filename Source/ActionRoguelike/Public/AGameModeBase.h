@@ -26,10 +26,16 @@ public:
 
 	UFUNCTION(Exec)
 	void KillAll();
+
+	UFUNCTION(BlueprintCallable, Category = "GamePlay")
+	void OnActorKilled(AActor* VictimActor, AActor* KillerActor);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "GamePlay")
 	UCurveFloat *DifficultyCurve;
+
+	UPROPERTY(EditDefaultsOnly, Category="GamePlay")
+	float PlayerRespawnTime=3.0f;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Spawning Bots")
 	TSubclassOf<AAAICharacter> BotPawnClass;
@@ -45,5 +51,8 @@ private:
 
 	UFUNCTION()
 	void OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+	UFUNCTION()
+	void RespawnPlayerElapsed(AController* Controller);
+
 	void SpawnBots();
 };

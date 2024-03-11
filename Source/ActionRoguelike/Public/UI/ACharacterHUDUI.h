@@ -21,6 +21,9 @@ public:
 	UFUNCTION()
     void ApplyHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta);
 
+	UFUNCTION(BlueprintCallable, Category="UIEvent")
+	void OnPawnChange(APawn* NewPawn);
+
 protected:
     UPROPERTY(BlueprintReadOnly, Category="UIAttributes")
     float CurHealth;
@@ -30,4 +33,5 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent ,Category="UIEvent")
 	void OnUIHealthChanged();
+	
 };

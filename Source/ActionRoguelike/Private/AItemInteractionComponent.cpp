@@ -47,7 +47,7 @@ void UAItemInteractionComponent::PrimaryInteract()
 			if(a->Implements<UAGameplayInterface>())
 			{
 				IAGameplayInterface::Execute_Interact(a, Cast<APawn>(o));
-				DrawDebugSphere(GetWorld(), hit.ImpactPoint, 10.0f, 32, FColor::Blue, false, 2.0f);
+				// DrawDebugSphere(GetWorld(), hit.ImpactPoint, 10.0f, 32, FColor::Blue, false, 2.0f);
 				break;
 			}
 		}

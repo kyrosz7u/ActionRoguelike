@@ -5,6 +5,7 @@
 
 #include "AItemInteractionComponent.h"
 #include "AAttributeComponent.h"
+#include "AGameModeBase.h"
 #include "Camera/CameraComponent.h"
 #include "UI/ACharacterHUDUI.h"
 #include "DrawDebugHelpers.h"
@@ -45,24 +46,11 @@ AACharacter::AACharacter()
 	// }
 }
 
-// Called every frame
-void AACharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 void AACharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	AttributeComponent->OnHealthChange.AddDynamic(this, &AACharacter::OnHealthChange);
-	if(MainHUDUIBP!=nullptr && MainHUDUI == nullptr)
-	{
-		MainHUDUI = NewObject<UACharacterHUDUI>(this, MainHUDUIBP);
-		AttributeComponent->OnHealthChange.AddDynamic(MainHUDUI, &UACharacterHUDUI::ApplyHealthChange);
-		AttributeComponent->ApplyHealthChanged(nullptr, 0);
-		MainHUDUI->AddToViewport();
-	}
 }
 
 void AACharacter::MoveForward(float Value)
@@ -174,7 +162,7 @@ void AACharacter::PrimaryAttack_TimeElapsed()
 	{
 		// 使用targetLoc-handLocaltion作为forward向量构造旋转
 		SpawnTM = FTransform(UKismetMathLibrary::MakeRotFromX(hitLoc-handLocaltion), handLocaltion);
-		DrawDebugLine(GetWorld(), handLocaltion, hitLoc, FColor::Red, false, 2.0f, 0, 1.0f);
+		// DrawDebugLine(GetWorld(), handLocaltion, hitLoc, FColor::Red, false, 2.0f, 0, 1.0f);
 	}
 	else
 	{
@@ -227,7 +215,7 @@ void AACharacter::DashAbility_TimeElapsed()
 	{
 		// 使用targetLoc-handLocaltion作为forward向量构造旋转
 		SpawnTM = FTransform(UKismetMathLibrary::MakeRotFromX(hitLoc-handLocaltion), handLocaltion);
-		DrawDebugLine(GetWorld(), handLocaltion, hitLoc, FColor::Red, false, 2.0f, 0, 1.0f);
+		// DrawDebugLine(GetWorld(), handLocaltion, hitLoc, FColor::Red, false, 2.0f, 0, 1.0f);
 	}
 	else
 	{
@@ -268,13 +256,19 @@ void AACharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* 
 	float MaxValue, float Delta)
 {
 	GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->GetTimeSeconds());
-	if(NewValue <= 0.0f && Delta < 0.0f)
+	if(OwningComp->IsAlive() == false && !bHasDied)
 	{
 		APlayerController* pc = Cast<APlayerController>(GetController());
+		auto GM = Cast<AAGameModeBase>(GetWorld()->GetAuthGameMode());
 		if(pc)
 		{
 			DisableInput(pc);
 		}
+		if(GM != nullptr)
+		{
+			GM->OnActorKilled(this, InstigatorActor);
+		}
+		bHasDied = true;
 	}
 }
 

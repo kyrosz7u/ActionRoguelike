@@ -67,8 +67,36 @@ void AAGameModeBase::SpawnBots()
 	}
 }
 
+void AAGameModeBase::OnActorKilled(AActor* VictimActor, AActor* KillerActor)
+{
+	auto PlayerCharacter = Cast<ACharacter>(VictimActor);
+	if(PlayerCharacter != nullptr)
+	{
+		//没有必要持有Handle，且为了防止多人游戏中handle相互覆盖，这里做成局部变量
+		FTimerHandle TimerHandle_RespawnDelay;
+		//Delegate用于需要传参的情况，类比于C++11的Bind函数
+		FTimerDelegate Delegate;
+		Delegate.BindUFunction(this, "RespawnPlayerElapsed", PlayerCharacter->GetController());
+		GetWorldTimerManager().SetTimer(TimerHandle_RespawnDelay, Delegate, PlayerRespawnTime, false);
+	}
+	UE_LOG(LogTemp, Log, TEXT("OnActorKilled:Victim:%s, Killer: %s"), *GetNameSafe(VictimActor), *GetNameSafe(KillerActor));
+}
+
+
+void AAGameModeBase::RespawnPlayerElapsed(AController* Controller)
+{
+	if(ensure(Controller))
+	{
+		//作用之一就是将pawn成员设为null
+		Controller->UnPossess();
+		//如果控制器拥有一个Pawn，则获取pawn的旋转作为控制器的新旋转
+		//如果控制器不拥有，则选择一个出生点，新生成一个pawn
+		RestartPlayer(Controller);
+	}
+}
+
 void AAGameModeBase::OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance,
-	EEnvQueryStatus::Type QueryStatus)
+                                              EEnvQueryStatus::Type QueryStatus)
 {
 	if(QueryStatus != EEnvQueryStatus::Success)
 	{

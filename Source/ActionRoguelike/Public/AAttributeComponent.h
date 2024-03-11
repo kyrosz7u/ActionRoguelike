@@ -8,19 +8,24 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnAttrChanged, AActor*, InstigatorActor, UAAttributeComponent*, OwningComp, float, NewValue, float, MaxValue, float, Delta);
 
+DECLARE_DELEGATE_FiveParams(FOnUIHealthChanged, AActor*, UAAttributeComponent*, float, float, float);
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), DisplayName="Attribute Component")
 class ACTIONROGUELIKE_API UAAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+public:
+	FOnUIHealthChanged OnUIHealthChanged;
+	
 public:	
 	// Sets default values for this component's properties
 	UAAttributeComponent();
 
 	static UAAttributeComponent* GetAttributes(AActor* FromActor);
 
-	static bool isActorAlive(AActor* Actor);
+	static bool IsActorAlive(AActor* Actor);
 
 	UPROPERTY(BlueprintAssignable, Category="Attributes")
 	FOnAttrChanged OnHealthChange;
@@ -37,6 +42,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	bool IsHealthFull() const;
 
+	UFUNCTION(BlueprintCallable, Category="Attributes")
+	float GetHealth() const;
+	
 	UFUNCTION(BlueprintCallable, Category="Attributes")
 	float GetHealthMax() const;
 

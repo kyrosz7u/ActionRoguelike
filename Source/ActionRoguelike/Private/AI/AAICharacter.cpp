@@ -111,7 +111,7 @@ void AAAICharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent
 		}
 		else if(ActiveHealthBar->Visibility == ESlateVisibility::Collapsed)
 		{
-			ActiveHealthBar->SetVisibility(ESlateVisibility::Visible);
+			ActiveHealthBar->PopUp();
 		}
 	}
 	

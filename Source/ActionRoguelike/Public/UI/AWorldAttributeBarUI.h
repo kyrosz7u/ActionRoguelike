@@ -22,7 +22,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category="UIAttributes")
 	bool bHasRemoved = false;
-	
+
+	void PopUp();
 
 protected:
 	UPROPERTY(Transient, meta = (BindWidget))
