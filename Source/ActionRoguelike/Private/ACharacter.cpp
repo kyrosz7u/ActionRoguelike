@@ -11,6 +11,7 @@
 #include "Abilities/AProjectileBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GamePlay/AActionComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -36,6 +37,8 @@ AACharacter::AACharacter()
 	bUseControllerRotationYaw = false;
 	AttributeComponent->AttackDamage = 20;
 
+	ActionComponent = CreateDefaultSubobject<UAActionComponent>("ActionComp");
+	
 	// CharacterUIBP 是在子类蓝图中设置的，父类先于子类构造，
 	// 所以在这里子类还没完成构造，CharacterUIBP没有被蓝图初始化！！！
 	// if(CharacterUIBP!=nullptr)
@@ -84,44 +87,48 @@ void AACharacter::Jump()
 
 void AACharacter::PrimaryAttack()
 {
-	if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
-	{
-		auto cameraForward = CameraComp->GetForwardVector();
-		auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
-		auto rawRot = GetActorRotation();
-		rawRot.Yaw = rot.Yaw;
-		SetActorRotation(rawRot);
-		PlayAnimMontage(PrimaryAttackMontage);
-		GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::PrimaryAttack_TimeElapsed, 0.2f, false);
-	}
+	// if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
+	// {
+	// 	auto cameraForward = CameraComp->GetForwardVector();
+	// 	auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
+	// 	auto rawRot = GetActorRotation();
+	// 	rawRot.Yaw = rot.Yaw;
+	// 	SetActorRotation(rawRot);
+	// 	PlayAnimMontage(PrimaryAttackMontage);
+	// 	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::PrimaryAttack_TimeElapsed, 0.2f, false);
+	// }
+	ActionComponent->StartActionByName(this, "PrimaryAttack");
 }
 
 void AACharacter::BlackholeAbility()
 {
-	if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
-	{
-		auto cameraForward = CameraComp->GetForwardVector();
-		auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
-		auto rawRot = GetActorRotation();
-		rawRot.Yaw = rot.Yaw;
-		SetActorRotation(rawRot);
-		PlayAnimMontage(BlackholeAbilityMontage);
-		GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::BlackHoleAbility_TimeElapsed, 0.2f, false);
-	}
+	// if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
+	// {
+	// 	auto cameraForward = CameraComp->GetForwardVector();
+	// 	auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
+	// 	auto rawRot = GetActorRotation();
+	// 	rawRot.Yaw = rot.Yaw;
+	// 	SetActorRotation(rawRot);
+	// 	PlayAnimMontage(BlackholeAbilityMontage);
+	// 	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::BlackHoleAbility_TimeElapsed, 0.2f, false);
+	// }
+
+	ActionComponent->StartActionByName(this, "Blackhole");
 }
 
 void AACharacter::DashAbility()
 {
-	if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
-	{
-		auto cameraForward = CameraComp->GetForwardVector();
-		auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
-		auto rawRot = GetActorRotation();
-		rawRot.Yaw = rot.Yaw;
-		SetActorRotation(rawRot);
-		PlayAnimMontage(DashAbilityMontage);
-		GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::DashAbility_TimeElapsed, 0.2f, false);
-	}
+	// if(!GetWorldTimerManager().IsTimerActive(AttackTimerHandle))
+	// {
+	// 	auto cameraForward = CameraComp->GetForwardVector();
+	// 	auto rot = UKismetMathLibrary::MakeRotFromX(cameraForward);
+	// 	auto rawRot = GetActorRotation();
+	// 	rawRot.Yaw = rot.Yaw;
+	// 	SetActorRotation(rawRot);
+	// 	PlayAnimMontage(DashAbilityMontage);
+	// 	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AACharacter::DashAbility_TimeElapsed, 0.2f, false);
+	// }
+	ActionComponent->StartActionByName(this, "Dash");
 }
 
 void AACharacter::Interact()
@@ -130,6 +137,16 @@ void AACharacter::Interact()
 	{
 		ItemInteractionComponent->PrimaryInteract();
 	}
+}
+
+void AACharacter::SprintStart()
+{
+	ActionComponent->StartActionByName(this, "Sprint");
+}
+
+void AACharacter::SprintStop()
+{
+	ActionComponent->StopActionByName(this, "Sprint");
 }
 
 // Called to bind functionality to input
@@ -149,6 +166,9 @@ void AACharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Ability3", IE_Pressed, this, &AACharacter::DashAbility);
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AACharacter::Interact);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AACharacter::SprintStart);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AACharacter::SprintStop);
 }
 
 void AACharacter::PrimaryAttack_TimeElapsed()

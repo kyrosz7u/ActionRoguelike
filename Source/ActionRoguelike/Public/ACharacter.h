@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "ACharacter.generated.h"
 
+class UAActionComponent;
 class UACharacterHUDUI;
 class UAItemInteractionComponent;
 class USpringArmComponent;
@@ -22,6 +23,9 @@ class ACTIONROGUELIKE_API AACharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AACharacter();
+
+	UFUNCTION(BlueprintCallable, Category="GamePlay")
+	float GetAttackDamage() const { return AttributeComponent->AttackDamage; }
 
 protected:
 	UPROPERTY(EditAnywhere, Category="Attack")
@@ -51,12 +55,16 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	UAItemInteractionComponent *ItemInteractionComponent;
 
-	UPROPERTY(BlueprintReadOnly, Category="Components")
+	UPROPERTY(EditAnywhere, Category="Components")
 	UAAttributeComponent *AttributeComponent;
+
+	UPROPERTY(EditAnywhere, Category="Components")
+	UAActionComponent *ActionComponent;
 
 	// Animation
 	UFUNCTION()
 	void OnHealthChange(AActor* InstigatorActor, UAAttributeComponent* OwningComp, float NewValue, float MaxValue, float Delta);
+
 
 public:	
 	virtual void PostInitializeComponents() override;
@@ -68,6 +76,8 @@ public:
 	void DashAbility();
 	void Interact();
 
+	void SprintStart();
+	void SprintStop();
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void PrimaryAttack_TimeElapsed();

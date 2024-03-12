@@ -2,7 +2,6 @@
 
 
 #include "GamePlay/AGameplayFunctionLibrary.h"
-
 #include "GamePlay/AAttributeComponent.h"
 
 bool UAGameplayFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)
@@ -20,7 +19,7 @@ bool UAGameplayFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* Target
 	}
 
 	return false;
-}
+}	
 
 bool UAGameplayFunctionLibrary::ApplyDirectionalDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount,
 	const FHitResult& HitResult)
@@ -30,7 +29,7 @@ bool UAGameplayFunctionLibrary::ApplyDirectionalDamage(AActor* DamageCauser, AAc
 	if(ret)
 	{
 		UPrimitiveComponent* HitComp = HitResult.GetComponent();
-		UE_LOG(LogTemp, Warning, TEXT("HitComp: %s Owner: %s"),*HitComp->GetName() , *HitComp->GetOwner()->GetName());
+		UE_LOG(LogTemp, Log, TEXT("HitComp: %s Owner: %s"),*HitComp->GetName() , *HitComp->GetOwner()->GetName());
 		if(HitComp && HitComp->IsSimulatingPhysics(HitResult.BoneName))
 		{
 			FVector Direction = HitResult.TraceEnd - HitResult.TraceStart;
