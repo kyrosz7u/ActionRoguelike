@@ -5,7 +5,7 @@
 
 #include "GamePlay/AAttributeComponent.h"
 #include "AIController.h"
-#include "Abilities/AProjectileBase.h"
+#include "Projectiles/AProjectileBase.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
 

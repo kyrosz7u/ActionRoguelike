@@ -13,7 +13,10 @@ UCLASS()
 class ACTIONROGUELIKE_API AAAIController : public AAIController
 {
 	GENERATED_BODY()
-
+public:
+	UFUNCTION(BlueprintCallable, Category="AI")
+	bool RestartLogic();
+	
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	UBehaviorTree *BehaviorTree;

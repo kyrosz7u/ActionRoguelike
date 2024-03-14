@@ -25,4 +25,6 @@ protected:
 	URadialForceComponent *RadialForceComp;
 
 	virtual void PostInitializeComponents() override;
+
+	virtual void Explode_Implementation() override;
 };

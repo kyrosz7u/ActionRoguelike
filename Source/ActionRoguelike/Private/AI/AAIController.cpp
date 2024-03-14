@@ -3,8 +3,18 @@
 
 #include "AI/AAIController.h"
 
-#include "BehaviorTree/BlackboardComponent.h"
-#include "GameFramework/Character.h"
+#include "BehaviorTree/BehaviorTree.h"
+
+bool AAAIController::RestartLogic()
+{
+	if (BehaviorTree)
+	{
+		BrainComponent->StopLogic("RestartLogic");
+		RunBehaviorTree(BehaviorTree);
+		return true;
+	}
+	return false;
+}
 
 void AAAIController::BeginPlay()
 {

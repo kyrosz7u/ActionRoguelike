@@ -16,6 +16,9 @@ class ACTIONROGUELIKE_API UAAction : public UObject
 public:
 	UFUNCTION()
 	void Initialize(UAActionComponent* InActionComp);
+
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	bool CanStart() const { return !bIsRunning; }
 	
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	void StartAction(AActor* Instigator);
@@ -35,4 +38,6 @@ public:
 private:
 	UPROPERTY()
 	UAActionComponent* OwnerComp;
+
+	bool bIsRunning = false;
 };

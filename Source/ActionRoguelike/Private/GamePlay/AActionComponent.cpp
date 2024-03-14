@@ -64,8 +64,12 @@ bool UAActionComponent::StartActionByName(AActor* Instigator, const FName Action
 	{
 		if(Action && Action->ActionName == ActionName)
 		{
-			Action->StartAction(Instigator);
-			return true;
+			if(Action->CanStart())
+			{
+				Action->StartAction(Instigator);
+				return true;
+			}
+			break;
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("StartActionByName. Action not found: %s"), *ActionName.ToString());

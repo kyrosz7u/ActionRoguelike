@@ -21,11 +21,13 @@ UWorld* UAAction::GetWorld() const
 void UAAction::StartAction_Implementation(AActor* Instigator)
 {
 	UE_LOG(LogTemp, Log, TEXT("Action Started: %s"), *GetNameSafe(this));
+	bIsRunning = true;
 }
 
 void UAAction::StopAction_Implementation(AActor* Instigator)
 {
 	UE_LOG(LogTemp, Log, TEXT("Action Stopped: %s"), *GetNameSafe(this));
+	bIsRunning = false;
 }
 
 

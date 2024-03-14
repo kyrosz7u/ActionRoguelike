@@ -8,7 +8,7 @@
 #include "GamePlay/AGameModeBase.h"
 #include "Camera/CameraComponent.h"
 #include "DrawDebugHelpers.h"
-#include "Abilities/AProjectileBase.h"
+#include "Projectiles/AProjectileBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GamePlay/AActionComponent.h"

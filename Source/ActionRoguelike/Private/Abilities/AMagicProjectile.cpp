@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Abilities/AMagicProjectile.h"
+#include "Projectiles/AMagicProjectile.h"
 #include "GamePlay/AAttributeComponent.h"
 #include "GamePlay/AGameplayFunctionLibrary.h"
 #include "ACharacter.h"

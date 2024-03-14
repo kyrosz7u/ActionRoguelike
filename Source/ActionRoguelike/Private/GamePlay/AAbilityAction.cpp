@@ -4,7 +4,7 @@
 #include "GamePlay/AAbilityAction.h"
 
 #include "ACharacter.h"
-#include "Abilities/AProjectileBase.h"
+#include "Projectiles/AProjectileBase.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -74,6 +74,7 @@ void UAAbilityAction::AttackDelay_Elapsed(ACharacter* InstigatorCharacter)
 	{
 		projObj->SetBaseDamage(damage);
 	}
+	StopAction(InstigatorCharacter);
 }
 
 bool UAAbilityAction::GetCharacterAimAt(FVector cameraForward, FVector CameraLocation, FVector &aimAtLoc)

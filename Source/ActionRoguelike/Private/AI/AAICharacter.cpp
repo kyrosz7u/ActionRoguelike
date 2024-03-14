@@ -2,7 +2,7 @@
 
 
 #include "AI/AAICharacter.h"
-
+#include "AI/AAIController.h"
 #include "GamePlay/AAttributeComponent.h"
 #include "AIController.h"
 #include "BrainComponent.h"
@@ -13,7 +13,6 @@
 #include "../../Public/UI/AWorldAttributeBarUI.h"
 #include "Components/TimelineComponent.h"
 
-class AAAIController;
 // Sets default values
 AAAICharacter::AAAICharacter()
 {
@@ -41,7 +40,6 @@ void AAAICharacter::PostInitializeComponents()
 
 	if(DeadDissolveCurve!=nullptr)
 	{
-		float TimelineLength = DeadDissolveTimeline.GetTimelineLength();
 		DeadDissolveTimeline.AddInterpFloat(DeadDissolveCurve, onTimelineCallback);
 		DeadDissolveTimeline.SetTimelineLengthMode(TL_LastKeyFrame);
 		DeadDissolveTimeline.SetPlayRate(1.0f / DeadDissolveTime);
@@ -53,8 +51,8 @@ void AAAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AAIController* AIController = Cast<AAIController>(GetController());
-	ControllerBBCopm = AIController->GetBlackboardComponent();
+	OwnerController = Cast<AAAIController>(GetController());
+	ControllerBBCopm = OwnerController->GetBlackboardComponent();
 }
 
 void AAAICharacter::Tick(float DeltaSeconds)
@@ -69,8 +67,9 @@ void AAAICharacter::Tick(float DeltaSeconds)
 
 void AAAICharacter::SetTargetActor(APawn* NewTarget)
 {
-	if(ControllerBBCopm)
+	if(OwnerController && ControllerBBCopm)
 	{
+		OwnerController->RestartLogic();
 		ControllerBBCopm->SetValueAsObject("TargetActor", NewTarget);
 		CachedTarget = NewTarget;
 	}
@@ -119,7 +118,7 @@ void AAAICharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent
 	
 	if(NewValue <= 0.0f)
 	{
-		AAIController* AIController = Cast<AAIController>(GetController());
+		const AAIController* AIController = Cast<AAIController>(GetController());
 		if(AIController)
 		{
 			AIController->GetBrainComponent()->StopLogic("Dead");
@@ -128,7 +127,7 @@ void AAAICharacter::OnHealthChange(AActor* InstigatorActor, UAAttributeComponent
 		GetMesh()->SetCollisionProfileName("Ragdoll");
 		GetMesh()->SetAllBodiesSimulatePhysics(true);
 		ActiveHealthBar->SetVisibility(ESlateVisibility::Collapsed);
-
+		
 		SetLifeSpan(DeadDissolveTime);
 		DeadDissolveTimeline.PlayFromStart();
 	}

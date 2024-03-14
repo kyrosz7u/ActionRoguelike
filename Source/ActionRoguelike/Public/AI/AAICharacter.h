@@ -8,6 +8,7 @@
 #include "AAICharacter.generated.h"
 
 class UBlackboardComponent;
+class AAAIController;
 class UTimelineComponent;
 class UAWorldAttributeBarUI;
 class UAAttributeComponent;
@@ -58,5 +59,7 @@ private:
 	APawn* CachedTarget;
 	UAWorldAttributeBarUI* ActiveHealthBar;
 	FTimeline  DeadDissolveTimeline;
+	AAAIController* OwnerController;
 	UBlackboardComponent* ControllerBBCopm;
+	
 };

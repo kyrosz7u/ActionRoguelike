@@ -1,13 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Abilities/ADashProjectile.h"
+#include "Projectiles/ADashProjectile.h"
 
-#include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "Sound/SoundCue.h"
 
 // Sets default values
